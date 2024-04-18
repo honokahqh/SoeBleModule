@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Application/MDK-ARM">
+      <UniqueIdentifier>{96b38b3a-7ad8-483f-9512-a23cc6449abc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application/User">
+      <UniqueIdentifier>{94aa67c5-0939-49a8-85e7-cd51d6310b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Drivers/STM32F0xx_HAL_Driver">
+      <UniqueIdentifier>{c42bfcfa-ab9e-40b2-b07b-acb12dac10de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Drivers/CMSIS">
+      <UniqueIdentifier>{e691ef0b-4439-4969-b983-1fe37bcd2c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modbus_PORTABLE">
+      <UniqueIdentifier>{b03b237e-d1d0-4386-8b28-c80b4d0f70d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modbus_CORE">
+      <UniqueIdentifier>{a484840e-6fa4-4bb0-a26d-2d0fbe5b3212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HARDWARE">
+      <UniqueIdentifier>{909f63a1-dd2d-4101-ad0c-eea2cc20dbdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RECORD">
+      <UniqueIdentifier>{c562106c-5578-4b71-866b-b21ab0b21bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTOS">
+      <UniqueIdentifier>{cf421fb6-361e-476c-b3ed-1ab9d7d2a857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="::CMSIS">
+      <UniqueIdentifier>{a1ef5fab-11a7-475e-8650-7e89c52e3588}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Src\main.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\gpio.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\iwdg.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\sys.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\stm32f0xx_hal_timebase_tim.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\usart.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\stm32f0xx_it.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\stm32f0xx_hal_msp.c">
+      <Filter>Application/User</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_i2c.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_i2c_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_gpio.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_dma.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_cortex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_pwr.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_pwr_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_flash.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_flash_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_exti.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_iwdg.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_tim.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_tim_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_uart.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_uart_ex.c">
+      <Filter>Drivers/STM32F0xx_HAL_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\system_stm32f0xx.c">
+      <Filter>Drivers/CMSIS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\MemoryBuff.c">
+      <Filter>Modbus_PORTABLE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\Physical.c">
+      <Filter>Modbus_PORTABLE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\PhysicalRx.c">
+      <Filter>Modbus_PORTABLE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\PhysicalTx.c">
+      <Filter>Modbus_PORTABLE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\Protocol.c">
+      <Filter>Modbus_PORTABLE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverCore.c">
+      <Filter>Modbus_CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverMap.c">
+      <Filter>Modbus_CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverStr.c">
+      <Filter>Modbus_CORE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\RingBuff\RingBuff.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\APP_Jump_Bootloader\Jump_Bootloader.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\STMFLASH\stmflash.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\APP\app.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\24CXX\24cxx.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HARDWARE\IIC\myiic.c">
+      <Filter>HARDWARE</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\RECORD\RECORD.h">
+      <Filter>RECORD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\lc.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\lc-addrlabels.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\lc-switch.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\pt.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\pt-sem.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ProtoOS\pt-timer.h">
+      <Filter>RTOS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include=".startup_stm32f070x6.s">
+      <Filter>Application/MDK-ARM</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+{
+    "files.autoGuessEncoding": true,
+    "files.encoding": "gbk",
+    "files.associations": {
+        "main.h": "c",
+        "stm32f0xx_it.h": "c",
+        "stdio.h": "c",
+        "corecrt_stdio_config.h": "c",
+        "stdbool.h": "c",
+        "random": "c",
+        "bsp_driver.h": "c",
+        "modbus_core.h": "c",
+        "modbus_hook.h": "c",
+        "modbus_user.h": "c",
+        "stm32f0xx_conf.h": "c",
+        "ymodem.h": "c",
+        "ir_ctrl.h": "c",
+        "ringbuffer.h": "c",
+        "stdint.h": "c",
+        "stm32f0xx_flash.h": "c",
+        "log.h": "c"
+    }
+}

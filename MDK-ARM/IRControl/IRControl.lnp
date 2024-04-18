@@ -1,0 +1,26 @@
+--cpu Cortex-M0
+"ircontrol\system_stm32f0xx.o"
+"ircontrol\startup_stm32f070x6.o"
+"ircontrol\stm32f0xx_misc.o"
+"ircontrol\main.o"
+"ircontrol\stm32f0xx_it.o"
+"ircontrol\bsp_driver.o"
+"ircontrol\app.o"
+"ircontrol\ir_ctrl.o"
+"ircontrol\ringbuffer.o"
+"ircontrol\ymodem.o"
+"ircontrol\stm32f0xx_tim.o"
+"ircontrol\stm32f0xx_rcc.o"
+"ircontrol\stm32f0xx_gpio.o"
+"ircontrol\stm32f0xx_iwdg.o"
+"ircontrol\stm32f0xx_syscfg.o"
+"ircontrol\stm32f0xx_usart.o"
+"ircontrol\stm32f0xx_flash.o"
+"ircontrol\modbus_core.o"
+"ircontrol\modbus_crc.o"
+"ircontrol\modbus_hook.o"
+"ircontrol\modbus_user.o"
+--library_type=microlib --strict --scatter "IRControl\IRControl.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "IRControl.map" -o IRControl\IRControl.axf

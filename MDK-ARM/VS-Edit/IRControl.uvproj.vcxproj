@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+    <ProjectGuid>{00830E5A-16F9-4820-8C9C-4109EEF87C9B}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\../Inc;..\../Drivers/STM32F0xx_HAL_Driver/Inc;..\../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;..\../Drivers/CMSIS/Device/ST/STM32F0xx/Include;..\../Drivers/CMSIS/Include;..\..\Modbus\Modbus_PORTABLE;..\..\Modbus\Modbus_CORE;..\..\HARDWARE\RingBuff;..\..\HARDWARE\APP_Jump_Bootloader;..\..\HARDWARE\STMFLASH;..\..\HARDWARE\APP;..\..\RECORD;..\..\ProtoOS;..\..\HARDWARE\24CXX;..\..\HARDWARE\IIC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_HAL_DRIVER;STM32F070x6;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\IRControl.uvproj.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Debug\IRControl.uvproj.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\IRControl.uvproj.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\Debug\IRControl.uvproj.exe</OutputFile>
+      <AdditionalDependencies>user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>..\../Inc;..\../Drivers/STM32F0xx_HAL_Driver/Inc;..\../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;..\../Drivers/CMSIS/Device/ST/STM32F0xx/Include;..\../Drivers/CMSIS/Include;..\..\Modbus\Modbus_PORTABLE;..\..\Modbus\Modbus_CORE;..\..\HARDWARE\RingBuff;..\..\HARDWARE\APP_Jump_Bootloader;..\..\HARDWARE\STMFLASH;..\..\HARDWARE\APP;..\..\RECORD;..\..\ProtoOS;..\..\HARDWARE\24CXX;..\..\HARDWARE\IIC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_HAL_DRIVER;STM32F070x6;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\IRControl.uvproj.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\IRControl.uvproj.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\IRControl.uvproj.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\Release\IRControl.uvproj.exe</OutputFile>
+      <AdditionalDependencies>user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include=".startup_stm32f070x6.s" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_cortex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_dma.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_exti.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_flash.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_flash_ex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_gpio.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_i2c.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_i2c_ex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_iwdg.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_pwr.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_pwr_ex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_rcc_ex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_tim.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_tim_ex.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_uart.c" />
+    <ClCompile Include="..\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_uart_ex.c" />
+    <ClCompile Include="..\..\HARDWARE\24CXX\24cxx.c" />
+    <ClCompile Include="..\..\HARDWARE\APP\app.c" />
+    <ClCompile Include="..\..\HARDWARE\APP_Jump_Bootloader\Jump_Bootloader.c" />
+    <ClCompile Include="..\..\HARDWARE\IIC\myiic.c" />
+    <ClCompile Include="..\..\HARDWARE\RingBuff\RingBuff.c" />
+    <ClCompile Include="..\..\HARDWARE\STMFLASH\stmflash.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverCore.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverMap.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_CORE\mbSlaverStr.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\MemoryBuff.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\Physical.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\PhysicalRx.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\PhysicalTx.c" />
+    <ClCompile Include="..\..\Modbus\Modbus_PORTABLE\Protocol.c" />
+    <ClCompile Include="..\..\Src\gpio.c" />
+    <ClCompile Include="..\..\Src\iwdg.c" />
+    <ClCompile Include="..\..\Src\main.c" />
+    <ClCompile Include="..\..\Src\stm32f0xx_hal_msp.c" />
+    <ClCompile Include="..\..\Src\stm32f0xx_hal_timebase_tim.c" />
+    <ClCompile Include="..\..\Src\stm32f0xx_it.c" />
+    <ClCompile Include="..\..\Src\sys.c" />
+    <ClCompile Include="..\..\Src\system_stm32f0xx.c" />
+    <ClCompile Include="..\..\Src\usart.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ProtoOS\lc-addrlabels.h" />
+    <ClInclude Include="..\..\ProtoOS\lc-switch.h" />
+    <ClInclude Include="..\..\ProtoOS\lc.h" />
+    <ClInclude Include="..\..\ProtoOS\pt-sem.h" />
+    <ClInclude Include="..\..\ProtoOS\pt-timer.h" />
+    <ClInclude Include="..\..\ProtoOS\pt.h" />
+    <ClInclude Include="..\..\RECORD\RECORD.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

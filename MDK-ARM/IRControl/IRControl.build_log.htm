@@ -1,0 +1,100 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 123 ºÎÇ¬ºÀ, 123123, LIC=ZB4EI-T291H-9U94U-S9BEL-0IQFX-SE5UR
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.36.0.0
+Toolchain Path:  E:\Software\MDK5.27\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DARMCM1.DLL V1.19.4.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.9.0
+Dialog DLL:      TARMCM1.DLL V1.14.4.0
+ 
+<h2>Project:</h2>
+E:\work\Z9 Module\À¶ÑÀÄ£¿é\org\MDK-ARM\IRControl.uvprojx
+Project File Date:  04/18/2024
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\Software\MDK5.27\ARM\ARMCC\Bin'
+Build target 'IRControl'
+compiling Modbus_User.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\modbus\Modbus_User.c: 1 warning, 0 errors
+compiling ir_ctrl.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\user\ir_ctrl.c: 1 warning, 0 errors
+compiling main.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+../Src/main.c: 1 warning, 0 errors
+compiling ringbuffer.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\user\ringbuffer.c: 1 warning, 0 errors
+compiling ymodem.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\user\ymodem.c: 1 warning, 0 errors
+compiling app.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\user\app.c: 1 warning, 0 errors
+compiling Modbus_hook.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\modbus\Modbus_hook.c: 1 warning, 0 errors
+compiling Modbus_Core.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\modbus\Modbus_Core.c: 1 warning, 0 errors
+compiling stm32f0xx_it.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+../Src/stm32f0xx_it.c: 1 warning, 0 errors
+compiling bsp_driver.c...
+../Inc/main.h(19): warning:  #47-D: incompatible redefinition of macro "IsApp" 
+  #define IsApp	 0
+..\user\bsp_driver.c: 1 warning, 0 errors
+linking...
+Program Size: Code=9476 RO-data=736 RW-data=124 ZI-data=1900  
+FromELF: creating hex file...
+After Build - User command #1: fromelf.exe --bin --output=IRControl.bin IRControl\IRControl.axf
+"IRControl\IRControl.axf" - 0 Error(s), 10 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM.CMSIS.5.8.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F0xx_DFP.2.1.1.pack
+                Keil.STM32F0xx_DFP.2.1.1
+                STMicroelectronics STM32F0 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_IRControl
+  E:\Software\Document\MDK\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  E:\Software\Document\MDK\Keil\STM32F0xx_DFP\2.1.1\Drivers\CMSIS\Device\ST\STM32F0xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.5.0
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>
