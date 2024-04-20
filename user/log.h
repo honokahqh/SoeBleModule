@@ -22,6 +22,12 @@
     } while(0) 
 
 #if LOG_LEVEL >= LOG_ERROR
+#define LOG_D(format, ...) printf(format, ##__VA_ARGS__)
+#else
+#define LOG_D(format, ...)
+#endif
+
+#if LOG_LEVEL >= LOG_ERROR
 #define LOG_E(tag, fmt, ...) log_printf(LOG_ERROR, tag, fmt, ##__VA_ARGS__)
 #else
 #define LOG_E(tag, fmt, ...)
@@ -39,10 +45,5 @@
 #define LOG_I(tag, fmt, ...)
 #endif
 
-#if LOG_LEVEL >= LOG_ALL
-#define LOG_D(tag, fmt, ...) log_printf(LOG_ALL, tag, fmt, ##__VA_ARGS__)
-#else
-#define LOG_D(tag, fmt, ...)
-#endif
 
 #endif // !

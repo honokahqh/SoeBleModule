@@ -23,27 +23,23 @@ void MBS_MappingInit()
 {
     uint8 i;
 
-    mbsCoil._startAddr = 12000; /* 起始地址 */
-    mbsCoil._endAddr = 12007;   /* 结束地址 */
+    mbsCoil._startAddr = 12000; /* 璧峰鍦板潃 */
+    mbsCoil._endAddr = 12010;   /* 缁撴潫鍦板潃 */
 
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < 11; i++)
     {
         MBS_MappingCoilInit(&mbsCoilValue[i], i + 12000, 0);
     }
 
-    mbsHoldReg._startAddr = 50000; /* 起始地址 */
-    mbsHoldReg._endAddr = 59001;   /* 结束地址 */
-    for(i = 0; i < 2;i++)
+    mbsHoldReg._startAddr = 50000; /* 璧峰鍦板潃 */
+    mbsHoldReg._endAddr = 59001;   /* 缁撴潫鍦板潃 */
+    for(i = 0; i < 5;i++)
     {
         MBS_MappingHoldRegInit(&mbsHoldRegValue[i], i + 59000, 0);
     }
-	for(i = 0; i < 2;i++)
+	for(i = 0; i < 12;i++)
     {
-        MBS_MappingHoldRegInit(&mbsHoldRegValue[i + 2], i + 51000, 0);
-    }
-    for(i = 0; i < 7;i++)
-    {
-        MBS_MappingHoldRegInit(&mbsHoldRegValue[i + 4], i + 51010, 0);
+        MBS_MappingHoldRegInit(&mbsHoldRegValue[i + 5], i + 51000, 0);
     }
     mbsHoldRegValue[MBS_Addr].pData = MBS_SelfAddr;
     mbsHoldRegValue[MBS_Ver].pData = Dev_Version;
@@ -63,18 +59,18 @@ uint16 MBS_MemWriteCoilsState(uint16 CoilAddr, uint16 Len, uint8 *data)
 {
     uint16 i, j;
 
-    for (i = 0; i < USER_COIL_NUM; i++) // 查找符合地址
+    for (i = 0; i < USER_COIL_NUM; i++) // 鏌ユ壘绗﹀悎鍦板潃
     {
         if (mbsCoilValue[i].coilAddr == CoilAddr)
             break;
     }
     if (i >= USER_COIL_NUM)
-        return i; /*读取失败，地址错误*/
+        return i; /*璇诲彇澶辫触锛屽湴鍧�閿欒*/
 
     for (j = 0; j < Len; j++)
         mbsCoilValue[i + j].pData = (data[j / 8] >> (j % 8)) & 0x01;
 
-    return 1; /* 读取成功 */
+    return 1; /* 璇诲彇鎴愬姛 */
 }
 uint8 MBS_MemWriteCoilState(uint16 coilAddr, uint16 data)
 {
@@ -98,16 +94,16 @@ uint8 MBS_MemReadHoldRegValue(uint16 regAddr, uint8 *Value, uint8 num)
     uint8 i, j;
     for (i = 0; i < USER_HOLDREG_NUM; i++)
     {
-        if (mbsHoldRegValue[i].regAddr == regAddr) /* 保持寄存器首地址正确 */
+        if (mbsHoldRegValue[i].regAddr == regAddr) /* 淇濇寔瀵勫瓨鍣ㄩ鍦板潃姝ｇ‘ */
         {
-            if (mbsHoldRegValue[i + num - 1].regAddr == (regAddr + num - 1)) /* 保持寄存器尾地址正确 */
+            if (mbsHoldRegValue[i + num - 1].regAddr == (regAddr + num - 1)) /* 淇濇寔瀵勫瓨鍣ㄥ熬鍦板潃姝ｇ‘ */
             {
                 for (j = 0; j < num; j++)
                 {
                     *Value++ = (mbsHoldRegValue[i + j].pData) >> 8;
                     *Value++ = (mbsHoldRegValue[i + j].pData);
                 }
-                return 1; /* 读取成功 */
+                return 1; /* 璇诲彇鎴愬姛 */
             }
         }
     }
@@ -119,16 +115,16 @@ uint8 MBS_MemWriteHoldRegValue(uint16 regAddr, uint8 *Value, uint8 num)
     uint8 i, j;
     for (i = 0; i < USER_HOLDREG_NUM; i++)
     {
-        if (mbsHoldRegValue[i].regAddr == regAddr) /* 保持寄存器首地址正确 */
+        if (mbsHoldRegValue[i].regAddr == regAddr) /* 淇濇寔瀵勫瓨鍣ㄩ鍦板潃姝ｇ‘ */
         {
-            if (mbsHoldRegValue[i + num - 1].regAddr == (regAddr + num - 1)) /* 保持寄存器尾地址正确 */
+            if (mbsHoldRegValue[i + num - 1].regAddr == (regAddr + num - 1)) /* 淇濇寔瀵勫瓨鍣ㄥ熬鍦板潃姝ｇ‘ */
             {
                 for (j = 0; j < num; j++)
                 {
                     mbsHoldRegValue[i + j].pData = (*Value++) << 8;
                     mbsHoldRegValue[i + j].pData |= *Value++;
                 }
-                return 1; /* 写入成功 */
+                return 1; /* 鍐欏叆鎴愬姛 */
             }
         }
     }

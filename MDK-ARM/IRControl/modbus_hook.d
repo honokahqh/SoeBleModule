@@ -47,5 +47,5 @@ ircontrol\modbus_hook.o: ..\ptos\pt-timer.h
 ircontrol\modbus_hook.o: ..\modbus\Modbus_CORE.h
 ircontrol\modbus_hook.o: ..\user\bsp_driver.h
 ircontrol\modbus_hook.o: ..\user\ringbuffer.h
-ircontrol\modbus_hook.o: ..\user\ir_ctrl.h
+ircontrol\modbus_hook.o: ..\user\ble_driver.h
 ircontrol\modbus_hook.o: ..\modbus\Modbus_hook.h

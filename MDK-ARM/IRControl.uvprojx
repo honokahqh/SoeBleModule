@@ -275,7 +275,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8000000</StartAddress>
+                <StartAddress>0x8002000</StartAddress>
                 <Size>0x4000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -424,11 +424,6 @@
               <FilePath>..\user\app.c</FilePath>
             </File>
             <File>
-              <FileName>ir_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\user\ir_ctrl.c</FilePath>
-            </File>
-            <File>
               <FileName>ringbuffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\ringbuffer.c</FilePath>
@@ -442,11 +437,6 @@
               <FileName>bsp_driver.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\bsp_driver.h</FilePath>
-            </File>
-            <File>
-              <FileName>ir_ctrl.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\ir_ctrl.h</FilePath>
             </File>
             <File>
               <FileName>ringbuffer.h</FileName>
@@ -467,6 +457,16 @@
               <FileName>log.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Airctrl_IR\Aircon IR\user\log.h</FilePath>
+            </File>
+            <File>
+              <FileName>ble_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\ble_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\ble_driver.h</FilePath>
             </File>
           </Files>
         </Group>

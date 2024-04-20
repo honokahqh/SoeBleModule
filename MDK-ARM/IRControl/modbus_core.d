@@ -47,4 +47,4 @@ ircontrol\modbus_core.o: ..\modbus\Modbus_USER.h
 ircontrol\modbus_core.o: ..\modbus\Modbus_hook.h
 ircontrol\modbus_core.o: ..\user\bsp_driver.h
 ircontrol\modbus_core.o: ..\user\ringbuffer.h
-ircontrol\modbus_core.o: ..\user\ir_ctrl.h
+ircontrol\modbus_core.o: ..\user\ble_driver.h

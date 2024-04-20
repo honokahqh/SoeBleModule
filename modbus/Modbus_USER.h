@@ -1,27 +1,12 @@
 #ifndef MODBUS_USER_H
 #define MODBUS_USER_H
 #include "main.h"
-/*********************************************************************
- * @author      Honokahqh
- *
- * @brief       Modbus slaver
- *
- * @Init:       ���ñ�����ַ                    MBS_SelfAddr
-                ʹ��ʵ�ֵ�Modbus������          MBS_FUNCTION_xx_ENABLE
-                ���ô����������?                MBS_PhysicalSendBuff()
- *              ���üĴ���Map                   MBS_MappingInit()
-                �����Ҫ������ֱ�Ӵ�����Hook��Ӧ�������뺯��
- * @Loop:       ���ս�������ú���MBS_CorePoll   
- *
- * @time:       2022.3.26
- */
-/*Modbus slaver By Honokahqh*/
-/***************************************************************/
-#define MBS_SelfAddr    0x6F
-#if IsApp
-#define Dev_Version     246
+
+#define MBS_SelfAddr    120
+#if IsApplication
+#define Dev_Version     228
 #else
-#define Dev_Version		245
+#define Dev_Version		227
 #endif
 /***************************************************************/
 #define	MBS_FUNCTION_01_ENABLE			        (1)			
@@ -33,8 +18,8 @@
 #define	MBS_FUNCTION_0F_ENABLE			        (1)
 #define	MBS_FUNCTION_10_ENABLE			        (1)
 
-#define USER_COIL_NUM					        (8)		
-#define USER_HOLDREG_NUM				        (11)		
+#define USER_COIL_NUM					        (11)		
+#define USER_HOLDREG_NUM				        (17)		
 #define USER_DISINPUT_NUM				        (0)
 #define USER_INPUTREG_NUM				        (0)
 
@@ -44,16 +29,27 @@
 #define MBS_Addr                                0
 #define MBS_Ver                                 1
 
-#define Coil_IR_Brand_Set                       0   
-#define Coil_IR_Switch                          2
-#define Coil_IR_Brand_Study                     7   
+#define BleMode     0
+#define WireMode    1
+#define Coil_MusicPause                         0   
+#define Coil_BleMode                            1
+#define Coil_LastMusic                          2
+#define Coil_NextMusic                          3
+#define Coil_MusicChange                        4
+#define Coil_MusicMode                          5
+#define Coil_MusicVolume                        6
+#define Coil_BleReConnect                       7
+#define Coil_BleReset                           8
+#define Coil_BleConnectState                    9
+#define Coil_MusicIsPlay                        10
 
-#define Reg_IR_ACK                              3
-#define Reg_IR_Brand                            4
-#define Reg_IR_Mode                             5
-#define Reg_IR_Temp                             6
-#define Reg_IR_WindSpeed                        7
-    
+#define Reg_Volume                              5
+#define Reg_BleMac                              6
+#define Reg_LoopIndex                           12
+#define Reg_MusicIndex                          13
+#define Reg_MusicTotal                          14
+#define Reg_MusicDuration                       15
+#define Reg_MusicProgress                       16
 
 
 void MBS_MappingInit(void);

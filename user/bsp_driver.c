@@ -1,13 +1,13 @@
 #include "bsp_driver.h"
 
-uart_state_t uart_ir_state, uart_rs485_state;
+uart_state_t uart_ble_state, uart_rs485_state;
 
 #pragma push
 #pragma O0
 /**
  * uart_init
- * @brief ³õÊ¼»¯UARTÍ¨ĞÅ£¬ÅäÖÃUSART1ºÍUSART2¡£
- * @note ÉèÖÃUSARTµÄ²¨ÌØÂÊ¡¢×Ö³¤¡¢Í£Ö¹Î»µÈ²ÎÊı£¬²¢Ê¹ÄÜ½ÓÊÕÖĞ¶Ï¡£
+ * @brief åˆå§‹åŒ–UARTé€šä¿¡ï¼Œé…ç½®USART1å’ŒUSART2ã€‚
+ * @note è®¾ç½®USARTçš„æ³¢ç‰¹ç‡ã€å­—é•¿ã€åœæ­¢ä½ç­‰å‚æ•°ï¼Œå¹¶ä½¿èƒ½æ¥æ”¶ä¸­æ–­ã€‚
  * @date 2024-01-31
  */
 void uart_init()
@@ -17,66 +17,66 @@ void uart_init()
 
 	NVIC_InitTypeDef NVIC_InitStructure;
 
-	/* USART1ÖĞ¶ÏÅäÖÃ */
+	/* USART1ä¸­æ–­é…ç½® */
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPriority = 0x01;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	/* USART2ÖĞ¶ÏÅäÖÃ */
+	/* USART2ä¸­æ–­é…ç½® */
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_Init(&NVIC_InitStructure);
 
-	/* ³õÊ¼»¯²¢Æô¶¯USART1ºÍUSART2 */
+	/* åˆå§‹åŒ–å¹¶å¯åŠ¨USART1å’ŒUSART2 */
 	USART1->BRR = 0x1388; // baud 9600   115200:0x1A1
 	USART1->CR1 = 0x2D;	  // Tx Rx RxIE Enable
 
 	USART2->BRR = 0x1A1; // baud 9600
-	USART2->CR1 = 0x2D;	  // Tx Rx RxIE Enable
+	USART2->CR1 = 0x2D;	 // Tx Rx RxIE Enable
 }
 
 /**
  * UartBleSendData
- * @brief Í¨¹ıUSART1·¢ËÍÊı¾İ¡£
- * @param data Òª·¢ËÍµÄÊı¾İÖ¸Õë¡£
- * @param len Òª·¢ËÍµÄÊı¾İ³¤¶È¡£
+ * @brief é€šè¿‡USART1å‘é€æ•°æ®ã€‚
+ * @param data è¦å‘é€çš„æ•°æ®æŒ‡é’ˆã€‚
+ * @param len è¦å‘é€çš„æ•°æ®é•¿åº¦ã€‚
  * @date 2024-01-31
  */
 void UartBleSendData(uint8_t *data, uint8_t len)
 {
 	for (uint8_t i = 0; i < len; i++)
 	{
-		USART2->TDR = data[i] & 0xFF;
-		while ((USART2->ISR & USART_FLAG_TXE) == RESET)
+		USART1->TDR = data[i] & 0xFF;
+		while ((USART1->ISR & USART_FLAG_TXE) == RESET)
 			;
 	}
 }
 
 /**
  * UartMbsSendData
- * @brief Í¨¹ıUSART2·¢ËÍÊı¾İ£¬²¢¿ØÖÆRS485´«Êä·½Ïò¡£
- * @param data Òª·¢ËÍµÄÊı¾İÖ¸Õë¡£
- * @param len Òª·¢ËÍµÄÊı¾İ³¤¶È¡£
+ * @brief é€šè¿‡USART2å‘é€æ•°æ®ï¼Œå¹¶æ§åˆ¶RS485ä¼ è¾“æ–¹å‘ã€‚
+ * @param data è¦å‘é€çš„æ•°æ®æŒ‡é’ˆã€‚
+ * @param len è¦å‘é€çš„æ•°æ®é•¿åº¦ã€‚
  * @date 2024-01-31
  */
 void UartMbsSendData(uint8_t *data, uint8_t len)
 {
-	RS485_TX(); // ÇĞ»»Îª·¢ËÍÄ£Ê½
+	RS485_TX(); // åˆ‡æ¢ä¸ºå‘é€æ¨¡å¼
 	for (uint8_t i = 0; i < len; i++)
 	{
-		USART1->TDR = data[i] & 0xFF;
-		while ((USART1->ISR & USART_FLAG_TXE) == RESET)
+		USART2->TDR = data[i] & 0xFF;
+		while ((USART2->ISR & USART_FLAG_TXE) == RESET)
 			;
 	}
-	while ((USART1->ISR & USART_FLAG_TC) == RESET)
+	while ((USART2->ISR & USART_FLAG_TC) == RESET)
 		;
-	RS485_RX(); // ÇĞ»»»Ø½ÓÊÕÄ£Ê½
+	RS485_RX(); // åˆ‡æ¢å›æ¥æ”¶æ¨¡å¼
 }
 
 /**
  * gpio_init
- * @brief ³õÊ¼»¯GPIO£¬ÅäÖÃLEDºÍRS485¿ØÖÆÒı½Å¡£
- * @note ÉèÖÃGPIOÄ£Ê½¡¢ËÙ¶È¡¢Êä³öÀàĞÍµÈ²ÎÊı£¬²¢³õÊ¼»¯ÏµÍ³LEDºÍºìÍâ¹¦ÂÊ¡£
+ * @brief åˆå§‹åŒ–GPIOï¼Œé…ç½®LEDå’ŒRS485æ§åˆ¶å¼•è„šã€‚
+ * @note è®¾ç½®GPIOæ¨¡å¼ã€é€Ÿåº¦ã€è¾“å‡ºç±»å‹ç­‰å‚æ•°ï¼Œå¹¶åˆå§‹åŒ–ç³»ç»ŸLEDå’Œçº¢å¤–åŠŸç‡ã€‚
  * @date 2024-01-31
  */
 void gpio_init()
@@ -86,12 +86,12 @@ void gpio_init()
 	/* Enable GPIO clock */
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA | RCC_AHBPeriph_GPIOB, ENABLE);
 
-	/* Á½Â·´®¿Úio³õÊ¼»¯ */
+	/* ä¸¤è·¯ä¸²å£ioåˆå§‹åŒ– */
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1);
-	
+
 	/* Configure pins as AF pushpull */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_2 | GPIO_Pin_3;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
@@ -111,14 +111,14 @@ void gpio_init()
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	SysLedOn(); // ´ò¿ªÏµÍ³LED
-	RS485_RX(); // ³õÊ¼ÉèÖÃÎªRS485½ÓÊÕÄ£Ê½
+	SysLedOn(); // æ‰“å¼€ç³»ç»ŸLED
+	RS485_RX(); // åˆå§‹è®¾ç½®ä¸ºRS485æ¥æ”¶æ¨¡å¼
 }
 
 /**
  * watchDog_init
- * @brief ³õÊ¼»¯¶ÀÁ¢¿´ÃÅ¹·£¨IWDG£©£¬ÓÃÓÚÏµÍ³¼à¿Ø¡£
- * @note ÅäÖÃ¿´ÃÅ¹·µÄÔ¤·ÖÆµÆ÷¡¢ÖØÔØÖµ£¬²¢ÆôÓÃ¿´ÃÅ¹·¡£
+ * @brief åˆå§‹åŒ–ç‹¬ç«‹çœ‹é—¨ç‹—ï¼ˆIWDGï¼‰ï¼Œç”¨äºç³»ç»Ÿç›‘æ§ã€‚
+ * @note é…ç½®çœ‹é—¨ç‹—çš„é¢„åˆ†é¢‘å™¨ã€é‡è½½å€¼ï¼Œå¹¶å¯ç”¨çœ‹é—¨ç‹—ã€‚
  * @date 2024-01-31
  */
 void watchDog_init()
@@ -130,7 +130,7 @@ void watchDog_init()
 	IWDG_Enable();
 }
 
-// flash ²Ù×÷Ïà¹Øº¯Êı,Ğ´(Halfword) ¶Á(byte) ²Á(page 1KB)ĞèÒª¶ÔÆë
+// flash æ“ä½œç›¸å…³å‡½æ•°,å†™(Halfword) è¯»(byte) æ“¦(page 1KB)éœ€è¦å¯¹é½
 void flash_write_halfword(uint32_t addr, uint16_t data)
 {
 	FLASH_Unlock();
@@ -162,7 +162,7 @@ void flash_write_word(uint32_t addr, uint32_t data)
 
 void flash_program_bytes(uint32_t addr, uint8_t *data, uint32_t len)
 {
-	// 1.data cpy 32Î»¶ÔÆä 2.°´×ÖĞ´Èë len / 4
+	// 1.data cpy 32ä½å¯¹å…¶ 2.æŒ‰å­—å†™å…¥ len / 4
 	uint32_t data32[32];
 	if (len > 128)
 	{
@@ -197,88 +197,50 @@ void flash_erase(uint32_t addr)
 	FLASH_Lock();
 }
 
-uint32_t offset1 = 0, offset2 = 0;
-void FlashDataSave(uint8_t type)
+uint32_t offset = 0;
+void FlashDataSave()
 {
-	uint16_t data[2];
+	uint16_t data[5];
 	memset(data, 0, sizeof(data));
-	if (offset1 > 1000)
+	if (offset > 1000)
 	{
-		flash_erase(Data1Addr);
-		offset1 = 0;
+		flash_erase(MbsDataAddr);
+		offset = 0;
 	}
-	if (offset2 > 1000)
-	{
-		flash_erase(Data2Addr);
-		offset2 = 0;
-	}
-	if (type == 1)
-	{
-		data[0] = IR_state.Brand & 0x0FFF;
-		data[0] |= IR_state.isSupportSix << 12;
-		flash_write(Data1Addr + offset1, data, 2);
-		offset1 += 4;
-	}
-	if (type == 2)
-	{
-		data[0] = IR_state.aircon_state.WindSpeed & 0x03;
-		data[0] |= (IR_state.aircon_state.Mode << 4) & 0x70;
-		data[0] |= (IR_state.aircon_state.Temp << 8) & 0x1F00;
-		flash_write(Data2Addr + offset2, data, 1);
-		offset2 += 2;
-	}
+	data[0] |= (mbsCoilValue[Coil_BleMode].pData & 0x01) << 1;	 /* åˆ‡æ¢æ¨¡å¼ï¼š0è“ç‰™ï¼Œ1æœ‰çº¿ */
+	data[0] |= (mbsCoilValue[Coil_MusicMode].pData & 0x01) << 2; /* 0åˆ—è¡¨å¾ªç¯ 1å•æ›²å¾ªç¯ */
+	data[1] |= (mbsHoldRegValue[Reg_LoopIndex].pData & 0xFF);	 /* å•æ›²å¾ªç¯ç¬¬né¦– */
+	data[2] = mbsHoldRegValue[Reg_BleMac].pData;				 /* 48ä½MACåœ°å€ */
+	data[2] |= mbsHoldRegValue[Reg_BleMac + 1].pData << 8;
+	data[3] = mbsHoldRegValue[Reg_BleMac + 2].pData;
+	data[3] |= mbsHoldRegValue[Reg_BleMac + 3].pData << 8;
+	data[4] = mbsHoldRegValue[Reg_BleMac + 4].pData;
+	data[4] |= mbsHoldRegValue[Reg_BleMac + 5].pData << 8;
+	flash_write(MbsDataAddr + offset, data, 5);
+	offset += 10;
 }
 
 void FlashDataRead()
 {
-	uint32_t data = 0, i;
-	for (i = 0; i < 1000; i += 4)
+	for (offset = 0; offset < 1000; offset += 10)
 	{
-		data = *(uint32_t *)(Data1Addr + i);
-		if (data == 0xFFFFFFFF)
+		if (*(uint16_t *)(MbsDataAddr + offset) == 0xFFFF)
 			break;
 	}
-	offset1 = i;
-	if (offset1 != 0)
+	if (offset != 0)
 	{
-		IR_state.Brand = *(uint16_t *)(Data1Addr + offset1 - 4) & 0x3FF;
-		IR_state.isSupportSix = (*(uint16_t *)(Data1Addr + offset1 - 4) >> 12) & 0x01;
-	}
-
-	for (i = 0; i < 1000; i += 2)
-	{
-		data = *(uint16_t *)(Data2Addr + i);
-		if (data == 0xFFFF)
-			break;
-	}
-	offset2 = i;
-	if (offset2 == 0)
-	{
-		IR_state.aircon_state.Mode = 0;
-		IR_state.aircon_state.WindSpeed = 0;
-		IR_state.aircon_state.Temp = 25;
+		mbsCoilValue[Coil_BleMode].pData = (*(uint16_t *)(MbsDataAddr + offset - 10) >> 1) & 0x01;
+		mbsCoilValue[Coil_MusicMode].pData = (*(uint16_t *)(MbsDataAddr + offset - 10) >> 2) & 0x01;
+		mbsHoldRegValue[Reg_LoopIndex].pData = *(uint16_t *)(MbsDataAddr + offset - 8) & 0xFF;
+		mbsHoldRegValue[Reg_BleMac].pData = *(uint16_t *)(MbsDataAddr + offset - 6) & 0xFF;
+		mbsHoldRegValue[Reg_BleMac + 1].pData = *(uint16_t *)(MbsDataAddr + offset - 6) >> 8;
+		mbsHoldRegValue[Reg_BleMac + 2].pData = *(uint16_t *)(MbsDataAddr + offset - 4)  & 0xFF;
+		mbsHoldRegValue[Reg_BleMac + 3].pData = *(uint16_t *)(MbsDataAddr + offset - 4) >> 8;
+		mbsHoldRegValue[Reg_BleMac + 4].pData = *(uint16_t *)(MbsDataAddr + offset - 2)  & 0xFF;
+		mbsHoldRegValue[Reg_BleMac + 5].pData = *(uint16_t *)(MbsDataAddr + offset - 2) >> 8;
 	}
 	else
-	{
-		data = *(uint16_t *)(Data2Addr + offset2 - 2);
-		IR_state.aircon_state.WindSpeed = data & 0x03;
-		IR_state.aircon_state.Mode = (data >> 4) & 0x07;
-		IR_state.aircon_state.Temp = (data >> 8) & 0x1F;
-	}
-	if (IR_state.aircon_state.Temp < 16 || IR_state.aircon_state.Temp > 30)
-		IR_state.aircon_state.Temp = 25;
-	if (IR_state.aircon_state.Mode > 0x08)
-		IR_state.aircon_state.Mode = 0;
-	if (IR_state.aircon_state.WindSpeed > 0x03)
-		IR_state.aircon_state.WindSpeed = 0;
-	if (IR_state.isSupportSix > 1)
-		IR_state.isSupportSix = 0;
-
-	mbsCoilValue[Coil_IR_Switch].pData = IR_state.aircon_state.Switch;
-	mbsHoldRegValue[Reg_IR_Brand].pData = IR_state.Brand;
-	mbsHoldRegValue[Reg_IR_Temp].pData = IR_state.aircon_state.Temp;
-	mbsHoldRegValue[Reg_IR_Mode].pData = IR_state.aircon_state.Mode;
-	mbsHoldRegValue[Reg_IR_WindSpeed].pData = IR_state.aircon_state.WindSpeed;
+		mbsCoilValue[Coil_BleMode].pData = BleMode;
 }
 
 typedef void (*appFunction)(void);
@@ -287,12 +249,12 @@ unsigned char jumpToApplication(unsigned int appAddress)
 {
 	appFunction jumpFunction;
 	unsigned int jumpAddress;
-	NVIC->ICER[0] = 0XFFFFFFFF;								  // Ê§ÄÜM0Ğ¾Æ¬ÖĞËùÓĞµÄÍâÉèÖĞ¶Ï
-	jumpAddress = *(volatile unsigned int *)(appAddress + 4); // »ñÈ¡Ìø×ª³ÌĞòµÄÈë¿ÚµØÖ·
+	NVIC->ICER[0] = 0XFFFFFFFF;								  // å¤±èƒ½M0èŠ¯ç‰‡ä¸­æ‰€æœ‰çš„å¤–è®¾ä¸­æ–­
+	jumpAddress = *(volatile unsigned int *)(appAddress + 4); // è·å–è·³è½¬ç¨‹åºçš„å…¥å£åœ°å€
 	jumpFunction = (appFunction)jumpAddress;
 
-	__set_MSP(*(volatile unsigned int *)appAddress); // ÉèÖÃSPÖ¸Õë ¸´Î»Ö¸Õë
-	jumpFunction();									 // ¿ªÊ¼Ìø×ª
-	return 1;										 // Ìø×ª³É¹¦
+	__set_MSP(*(volatile unsigned int *)appAddress); // è®¾ç½®SPæŒ‡é’ˆ å¤ä½æŒ‡é’ˆ
+	jumpFunction();									 // å¼€å§‹è·³è½¬
+	return 1;										 // è·³è½¬æˆåŠŸ
 }
 #pragma pop

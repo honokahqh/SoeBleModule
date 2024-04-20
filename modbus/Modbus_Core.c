@@ -4,9 +4,9 @@ MBS_PortFrameTypes MBS_Buf;
 volatile uint8_t mbs_has_data;
 /**
  * Cmd_MBS_Cmd_Request
- * @brief ÊÕµ½LoraÖ÷»ú0x60ÃüÁîÊ±µ÷ÓÃ-ÅÐ¶ÏÊÇ·ñÎª±¾»úµØÖ·
- * @brief Èç¹ûÊÇ±¾»úµØÖ·Ö±½Ó´¦Àí»Ø¸´,·ñÔò½øMBSÖ÷»ú¶ÓÁÐ
- * @brief v101ÐÂÔö×÷ÎªÆÕÍ¨ÖÐ¿ØÊ¹ÓÃ,²»ÐèÒª×ª·¢´Ó»úÊý¾Ý
+ * @brief æ”¶åˆ°Loraä¸»æœº0x60å‘½ä»¤æ—¶è°ƒç”¨-åˆ¤æ–­æ˜¯å¦ä¸ºæœ¬æœºåœ°å€
+ * @brief å¦‚æžœæ˜¯æœ¬æœºåœ°å€ç›´æŽ¥å¤„ç†å›žå¤,å¦åˆ™è¿›MBSä¸»æœºé˜Ÿåˆ—
+ * @brief v101æ–°å¢žä½œä¸ºæ™®é€šä¸­æŽ§ä½¿ç”¨,ä¸éœ€è¦è½¬å‘ä»Žæœºæ•°æ®
  * @author Honokahqh
  * @date 2023-08-05
  */
@@ -21,13 +21,13 @@ void MBS_CorePoll()
 
 /**
  * MBS_CoreAnalyze
- * @brief mbs´Ó»úÐ­Òé·ÖÎö
+ * @brief mbsä»Žæœºåè®®åˆ†æž
  * @author Honokahqh
  * @date 2023-08-05
  */
-void MBS_CoreAnalyze() // Ö»ÊµÏÖÁ½¸ö¹¦ÄÜ---03H¶Á±£³Ö¼Ä´æÆ÷---10HÐ´¶à¸ö±£³Ö¼Ä´æÆ÷
+void MBS_CoreAnalyze() // åªå®žçŽ°ä¸¤ä¸ªåŠŸèƒ½---03Hè¯»ä¿æŒå¯„å­˜å™¨---10Hå†™å¤šä¸ªä¿æŒå¯„å­˜å™¨
 {
-    switch (MBS_Buf._rxBuff[1]) /* µÚ2¸ö×Ö½Ú ¹¦ÄÜÂë */
+    switch (MBS_Buf._rxBuff[1]) /* ç¬¬2ä¸ªå­—èŠ‚ åŠŸèƒ½ç  */
     {
 #if MBS_FUNCTION_01_ENABLE
     case 0x01:
@@ -85,7 +85,7 @@ void MBS_PortSendWithCRC(uint8 *buf, uint8 len)
 /*
 *****************************************************
 * Method:       MBS_PortSendAck
-* Description:	·¢ËÍÓ¦´ðÏûÏ¢
+* Description:	å‘é€åº”ç­”æ¶ˆæ¯
 * Author:       @Draven
 * Date:  		2017/05/08
 * Returns:      void
@@ -99,7 +99,7 @@ void MBS_PortSendAck(MBS_EX_STATE ackCode)
     {
         MBS_Buf._txBuff[MBS_FRAME_SLAVER_ADDR] = MBS_SelfAddr;
         MBS_Buf._txBuff[MBS_FRAME_FUNCTION_CODE] = MBS_Buf._rxBuff[MBS_FRAME_FUNCTION_CODE] | 0x80;
-        MBS_Buf._txBuff[MBS_FRAME_FUNCTION_CODE + 1] = (uint8)ackCode; // ·¢ËÍ´íÎóÂë
+        MBS_Buf._txBuff[MBS_FRAME_FUNCTION_CODE + 1] = (uint8)ackCode; // å‘é€é”™è¯¯ç 
         MBS_Buf._txLen = 3;
     }
     else

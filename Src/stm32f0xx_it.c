@@ -8,13 +8,13 @@ __IO uint32_t TimingDelay;
 void SysTick_Handler(void)
 {
     sys_ms++;
-    if (uart_ir_state.idle)
+    if (uart_ble_state.idle)
     {
-        uart_ir_state.idle++;
-        if (uart_ir_state.idle > UART_IDLE)
+        uart_ble_state.idle++;
+        if (uart_ble_state.idle > UART_IDLE * 4)
         {
-            uart_ir_state.has_data = 1;
-            uart_ir_state.idle = 0;
+            uart_ble_state.has_data = 1;
+            uart_ble_state.idle = 0;
         }
     }
     if (uart_rs485_state.idle)
@@ -55,8 +55,8 @@ void USART1_IRQHandler(void)
     if (USART1->ISR & (0x01 << 5)) // Rx IE
     {
         /* Read one byte from the receive data register */
-        uart_ir_state.data[uart_ir_state.data_len++] = USART1->RDR;
-        uart_ir_state.idle = 1;
+        uart_ble_state.data[uart_ble_state.data_len++] = USART1->RDR;
+        uart_ble_state.idle = 1;
     }
     else if (USART1->ISR & (0x01 << 1)) // frame err
     {
@@ -80,7 +80,7 @@ void USART2_IRQHandler(void)
         uart_rs485_state.data[uart_rs485_state.data_len++] = USART2->RDR;
         uart_rs485_state.idle = 1;
     }
-    // overrunµÈÆäËûÎÊÌâ¼òµ¥´¦Àí
+    // overrunç­‰å…¶ä»–é—®é¢˜ç®€å•å¤„ç†
     else if (USART2->ISR & (0x01 << 1)) // frame err
     {
         USART2->ICR = (0x01 << 1);

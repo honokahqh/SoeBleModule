@@ -9,7 +9,7 @@ extern MBS_HoldRegValueTypes mbsHoldRegValue[USER_HOLDREG_NUM];
 /*********************************************************************
  * @fn          MBS_Function01H
  *
- * @brief       Modbus01H£¬¶ÁÏßÈ¦
+ * @brief       Modbus01H
  *
  * @param       none
  *
@@ -24,13 +24,13 @@ void MBS_Function01H(void)
 	uint8 status[MBS_PORT_TXBUFF_SIZE] = {0};
 	uint8 temp;
 
-	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) + MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1]; /* ¼Ä´æÆ÷¸öÊý */
+	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) + MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1];
 	if ((num < 1) || (num > USER_COIL_NUM))
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_VALUE);
 		return;
 	}
-	coil = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) + MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; /* ¼Ä´æÆ÷ºÅ */
+	coil = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) + MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1];
 	if ((coil < mbsCoil._startAddr) || ((coil + num - 1) > mbsCoil._endAddr))
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_ADDRESS);
@@ -53,7 +53,7 @@ void MBS_Function01H(void)
 			status[i / 8] |= (1 << (i % 8));
 			break;
 		default:
-			MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); /*·µ»Ø´íÎó²¢ÇÒÍË³ö*/
+			MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); 
 			return;
 		}
 	}
@@ -74,7 +74,7 @@ void MBS_Function01H(void)
 /*********************************************************************
  * @fn          MBS_Function05H
  *
- * @brief       Modbus05H£¬Ð´µ¥¸öÏßÈ¦
+ * @brief       Modbus05H
  *
  * @param       none
  *
@@ -95,26 +95,10 @@ void MBS_Function05H(void)
 	coil = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) + MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1];
 	if ((coil >= mbsCoil._startAddr) && (coil <= mbsCoil._endAddr))
 	{
-		if (MBS_MemWriteCoilState(coil, value) > 1) // Ê§°Ü
+		if (MBS_MemWriteCoilState(coil, value) > 1) 
 		{
-			MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); /*·µ»Ø´íÎó²¢ÇÒÍË³ö*/
+			MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); 
 			return;
-		}
-		else
-		{
-			if(coil == mbsCoilValue[Coil_IR_Switch].coilAddr)
-			{
-				write_buffer(IR_AirConCtrl << 16 | IR_Switch << 8 | (!value));
-			}
-			else if(coil == mbsCoilValue[Coil_IR_Brand_Set].coilAddr)
-			{
-				write_buffer(IR_BrandSet << 16 | mbsHoldRegValue[Reg_IR_Brand].pData);
-			}
-			else if(coil == mbsCoilValue[Coil_IR_Brand_Study].coilAddr)
-			{
-				write_buffer(IR_BrandStudyMode << 16 | 0);
-			}
-			MBS_PortSendAck(MBS_EX_NONE);
 		}
 	}
 	else
@@ -128,7 +112,7 @@ void MBS_Function05H(void)
 /*********************************************************************
  * @fn          MBS_Function0FH
  *
- * @brief       Modbus0FH£¬Ð´ÏßÈ¦
+ * @brief       Modbus0F
  *
  * @param       none
  *
@@ -139,7 +123,7 @@ void MBS_Function0FH(void)
 	uint16 coil;
 	uint16 num;
 	uint8 byteNum;
-	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) + MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1]; /* ¼Ä´æÆ÷¸öÊý */
+	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) + MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1]; 
 	if ((num < 1) || (num > USER_COIL_NUM))
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_VALUE);
@@ -157,7 +141,7 @@ void MBS_Function0FH(void)
 		return;
 	}
 
-	coil = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) + MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; /* ¼Ä´æÆ÷ºÅ */
+	coil = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) + MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1];
 	if ((coil < mbsCoil._startAddr) || ((coil + num - 1) > mbsCoil._endAddr))
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_ADDRESS);
@@ -166,7 +150,7 @@ void MBS_Function0FH(void)
 
 	if (MBS_MemWriteCoilsState(coil, num, &MBS_Buf._rxBuff[MBS_FRAME_BYTE_NUM + 1]) > 1)
 	{
-		MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); /*·µ»Ø´íÎó²¢ÇÒÍË³ö*/
+		MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE);
 		return;
 	}
 	else
@@ -180,7 +164,7 @@ void MBS_Function0FH(void)
 /*********************************************************************
  * @fn          MBS_Function03H
  *
- * @brief       Modbus03H£¬¶Á±£³Ö¼Ä´æÆ÷
+ * @brief       Modbus03H
  *
  * @param       none
  *
@@ -192,8 +176,8 @@ void MBS_Function03H(void)
 	uint16 num;
 	uint8 i;
 
-	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) | MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1];	  /* ¼Ä´æÆ÷¸öÊý */
-	reg = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; /* ¼Ä´æÆ÷ºÅ */
+	num = (MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8) | MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1];	
+	reg = (MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8) | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1];
 	if (num < 1 || num > USER_HOLDREG_NUM * 2)
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_VALUE);
@@ -208,7 +192,7 @@ void MBS_Function03H(void)
 	MBS_Buf._txBuff[MBS_Buf._txLen++] = MBS_Buf._rxBuff[0];
 	MBS_Buf._txBuff[MBS_Buf._txLen++] = MBS_Buf._rxBuff[1];
 	MBS_Buf._txBuff[MBS_Buf._txLen++] = num * 2;
-	i = MBS_MemReadHoldRegValue(reg, &MBS_Buf._txBuff[MBS_Buf._txLen], num); /* ÀàËÆmemcpy ¶Á */
+	i = MBS_MemReadHoldRegValue(reg, &MBS_Buf._txBuff[MBS_Buf._txLen], num);
 	if (i == 0)
 	{
 		MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE);
@@ -222,7 +206,7 @@ void MBS_Function03H(void)
 /*********************************************************************
  * @fn          MBS_Function06H
  *
- * @brief       Modbus06H£¬Ð´1¸ö±£³Ö¼Ä´æÆ÷
+ * @brief       Modbus06H
  *
  * @param       none
  *
@@ -233,34 +217,19 @@ void MBS_Function06H(void)
 	uint16 reg;
 	uint8 i;
 
-	reg = MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8 | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; /* ¼Ä´æÆ÷ºÅ */
+	reg = MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8 | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; 
 
 	if (reg < mbsHoldReg._startAddr || reg > mbsHoldReg._endAddr)
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_ADDRESS);
 		return;
 	}
-	i = MBS_MemWriteHoldRegValue(reg, &MBS_Buf._rxBuff[4], 1); /* ÀàËÆmemcpy Ð´ */
+	i = MBS_MemWriteHoldRegValue(reg, &MBS_Buf._rxBuff[4], 1); 
 	if (i == 0)
 	{
 		MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE);
 		return;
 	}
-	if (reg == mbsHoldRegValue[Reg_IR_WindSpeed].regAddr && mbsHoldRegValue[Reg_IR_WindSpeed].pData < 3)
-    {
-		if(IR_state.isSupportSix && mbsHoldRegValue[Reg_IR_WindSpeed].pData != 0)
-			write_buffer(IR_AirConCtrl << 16 | (IR_WindSpeed << 8) | ((mbsHoldRegValue[Reg_IR_WindSpeed].pData * 2) - 1));
-		else
-			write_buffer(IR_AirConCtrl << 16 | (IR_WindSpeed << 8) | mbsHoldRegValue[Reg_IR_WindSpeed].pData);
-    }
-    else if (reg == mbsHoldRegValue[Reg_IR_Mode].regAddr)
-    {
-        write_buffer(IR_AirConCtrl << 16 | (IR_Mode << 8) | mbsHoldRegValue[Reg_IR_Mode].pData);
-    }
-    else if (reg == mbsHoldRegValue[Reg_IR_Temp].regAddr)
-    {
-        write_buffer(IR_AirConCtrl << 16 | (IR_TempSet << 8) | mbsHoldRegValue[Reg_IR_Temp].pData - 16);
-    }
 	MBS_PortSendAck(MBS_EX_NONE);
 }
 #endif
@@ -269,7 +238,7 @@ void MBS_Function06H(void)
 /*********************************************************************
  * @fn          MBS_Function10H
  *
- * @brief       Modbus10H£¬Ð´¶à¸ö±£³Ö¼Ä´æÆ÷
+ * @brief       Modbus10H
  *
  * @param       none
  *
@@ -281,8 +250,8 @@ void MBS_Function10H(void)
 	uint16 num;
 	uint8 i;
 
-	num = MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8 | MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1];		/* ¼Ä´æÆ÷¸öÊý */
-	reg = MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8 | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; /* ¼Ä´æÆ÷ºÅ */
+	num = MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM] << 8 | MBS_Buf._rxBuff[MBS_FRAME_OPT_NUM + 1];		
+	reg = MBS_Buf._rxBuff[MBS_FRAME_START_ADD] << 8 | MBS_Buf._rxBuff[MBS_FRAME_START_ADD + 1]; 
 	if (num < 1 || num > USER_HOLDREG_NUM * 2)
 	{
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_VALUE);
@@ -293,7 +262,7 @@ void MBS_Function10H(void)
 		MBS_PortSendAck(MBS_EX_ILLEGAL_DATA_ADDRESS);
 		return;
 	}
-	i = MBS_MemWriteHoldRegValue(reg, &MBS_Buf._rxBuff[7], num); /* ÀàËÆmemcpy Ð´ */
+	i = MBS_MemWriteHoldRegValue(reg, &MBS_Buf._rxBuff[7], num); 
 	if (i == 0)
 	{
 		MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE);

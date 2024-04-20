@@ -48,4 +48,4 @@ ircontrol\ringbuffer.o: ..\modbus\Modbus_USER.h
 ircontrol\ringbuffer.o: ..\modbus\Modbus_hook.h
 ircontrol\ringbuffer.o: ..\user\bsp_driver.h
 ircontrol\ringbuffer.o: ..\user\ringbuffer.h
-ircontrol\ringbuffer.o: ..\user\ir_ctrl.h
+ircontrol\ringbuffer.o: ..\user\ble_driver.h

@@ -9,7 +9,7 @@ static struct pt uart_ir;
 static struct pt uart_rs485;
 static struct pt period_process;
 
-static int Task1_uart_ir(struct pt *pt);
+static int Task1_uart_ble(struct pt *pt);
 static int Task2_uart_rs485(struct pt *pt);
 static int Task3_period_process(struct pt *pt);
 
@@ -19,79 +19,61 @@ static void SysMonitor(void);
 static bool IapPacketCheck(void);
 static void Ymodem_timeout_process(void);
 static void MbsDataSave(void);
-
+static void music_config(void);
 /**
  * system_run
- * @brief Ö÷Ñ­»·º¯Êı£¬¸ºÔğÖÜÆÚĞÔµØÖ´ĞĞ¸÷ÈÎÎñ¡£
- * @note Ê¹ÓÃĞ­³Ì(pt)´¦Àí¶àÈÎÎñ£¬È·±£ÏµÍ³µÄÏìÓ¦ĞÔºÍÁé»îĞÔ¡£
+ * @brief ä¸»å¾ªç¯å‡½æ•°ï¼Œè´Ÿè´£å‘¨æœŸæ€§åœ°æ‰§è¡Œå„ä»»åŠ¡ã€‚
+ * @note ä½¿ç”¨åç¨‹(pt)å¤„ç†å¤šä»»åŠ¡ï¼Œç¡®ä¿ç³»ç»Ÿçš„å“åº”æ€§å’Œçµæ´»æ€§ã€‚
  * @date 2024-01-31
  */
 void system_run()
 {
-    // ³õÊ¼»¯Ğ­³Ì
+    // åˆå§‹åŒ–åç¨‹
     PT_INIT(&uart_ir);
     PT_INIT(&uart_rs485);
     PT_INIT(&period_process);
 
-    // Ö÷Ñ­»·
+    // ä¸»å¾ªç¯
     while (1)
     {
-        Task1_uart_ir(&uart_ir);
+#if IsApplication
+        Task1_uart_ble(&uart_ir);
+#endif
         Task2_uart_rs485(&uart_rs485);
         Task3_period_process(&period_process);
     }
 }
 
 /**
- * Task1_uart_ir
- * @brief ´¦ÀíÓëºìÍâÍ¨ĞÅÏà¹ØµÄÈÎÎñ¡£
- * @param pt Ğ­³Ì×´Ì¬
- * @return Ğ­³ÌÖ´ĞĞ×´Ì¬
+ * Task1_uart_ble
+ * @brief å¤„ç†ä¸è“ç‰™é€šä¿¡ç›¸å…³çš„ä»»åŠ¡ã€‚
+ * @param pt åç¨‹çŠ¶æ€
+ * @return åç¨‹æ‰§è¡ŒçŠ¶æ€
  * @date 2024-01-31
  */
-static int Task1_uart_ir(struct pt *pt)
+uint8_t bleBuffer[256] = {0};
+static int Task1_uart_ble(struct pt *pt)
 {
-    static uint8_t IrCmdErrCount = 0;
     PT_BEGIN(pt);
     while (1)
     {
-        // µÈ´ıºìÍâÊı¾İµ½´ï
-        PT_WAIT_UNTIL(pt, uart_ir_state.has_data);
-#if LOG_LEVEL >= LOG_INFO
-        LOG_I(TAG, "IR data received len: %d data:", uart_ir_state.data_len);
-        for (int i = 0; i < uart_ir_state.data_len; i++)
-        {
-            printf("%02X ", uart_ir_state.data[i]);
-        }
-        printf("\r\n");
-#endif
-        // ´¦Àí½ÓÊÕµ½µÄºìÍâÊı¾İ
-        if (uart_ir_state.data_len == 6)
-        {
-            if (ir_cmd_ack_process() == IR_Success)
-            {
-                IrCmdErrCount = 0;
-            }
-            else
-            {
-                IrCmdErrCount++;
-                if (IrCmdErrCount > 10)
-                {
-                    NVIC_SystemReset();
-                }
-            }
-        }
-        IR_state.waitAck = 0;
-        memset(&uart_ir_state, 0, sizeof(uart_state_t));
+        // ç­‰å¾…è“ç‰™æ•°æ®åˆ°è¾¾
+        PT_WAIT_UNTIL(pt, uart_ble_state.has_data);
+        LOG_I(TAG, "ble data received: %s \r\n", uart_ble_state.data);
+        // å¤„ç†è“ç‰™æ•°æ®
+        memcpy(bleBuffer, uart_ble_state.data, uart_ble_state.data_len);
+        parseAndHandleCommand(bleBuffer);
+        memset(bleBuffer, 0, sizeof(bleBuffer));
+        memset(&uart_ble_state, 0, sizeof(uart_state_t));
     }
     PT_END(pt);
 }
 
 /**
  * Task2_uart_rs485
- * @brief ´¦ÀíÓëRS485Í¨ĞÅÏà¹ØµÄÈÎÎñ¡£
- * @param pt Ğ­³Ì×´Ì¬
- * @return Ğ­³ÌÖ´ĞĞ×´Ì¬
+ * @brief å¤„ç†ä¸RS485é€šä¿¡ç›¸å…³çš„ä»»åŠ¡ã€‚
+ * @param pt åç¨‹çŠ¶æ€
+ * @return åç¨‹æ‰§è¡ŒçŠ¶æ€
  * @date 2024-01-31
  */
 static int Task2_uart_rs485(struct pt *pt)
@@ -99,25 +81,22 @@ static int Task2_uart_rs485(struct pt *pt)
     PT_BEGIN(pt);
     while (1)
     {
-        // µÈ´ıRS485Êı¾İµ½´ï
+        // ç­‰å¾…RS485æ•°æ®åˆ°è¾¾
         PT_WAIT_UNTIL(pt, uart_rs485_state.has_data);
+        LOG_I(TAG, "ble data received: %s \r\n", uart_rs485_state.data);
 #if LOG_LEVEL >= LOG_INFO
-        LOG_I(TAG, "RS485 data received len: %d data:", uart_rs485_state.data_len);
-        for (int i = 0; i < uart_rs485_state.data_len; i++)
-        {
-            printf("%02X ", uart_rs485_state.data[i]);
-        }
-        printf("\r\n");
+        UartBleSendData(uart_rs485_state.data, uart_rs485_state.data_len);
 #endif
-        // ¼ì²éÊÇ·ñÎªIAP°ü£¬Èç¹û²»ÊÇ£¬Ôò½øĞĞÕı³£´¦Àí
+        // æ£€æŸ¥æ˜¯å¦ä¸ºIAPåŒ…ï¼Œå¦‚æœä¸æ˜¯ï¼Œåˆ™è¿›è¡Œæ­£å¸¸å¤„ç†
         if (IapPacketCheck() == false && uart_rs485_state.data_len < 64)
         {
-            // Õı³£´¦ÀíRS485Êı¾İ
+#if IsApplication
+            // æ­£å¸¸å¤„ç†RS485æ•°æ®
             memcpy(MBS_Buf._rxBuff, uart_rs485_state.data, uart_rs485_state.data_len);
             MBS_Buf._rxLen = uart_rs485_state.data_len;
             MBS_CorePoll();
+#endif
         }
-
         memset(&uart_rs485_state, 0, sizeof(uart_state_t));
     }
     PT_END(pt);
@@ -125,9 +104,9 @@ static int Task2_uart_rs485(struct pt *pt)
 
 /**
  * Task3_period_process
- * @brief ´¦ÀíÖÜÆÚĞÔÈÎÎñ£¬ÈçModbusÊı¾İ´¦Àí¡¢LED¿ØÖÆ¡¢ÏµÍ³¼à¿ØºÍYmodem³¬Ê±´¦Àí¡£
- * @param pt Ğ­³Ì×´Ì¬
- * @return Ğ­³ÌÖ´ĞĞ×´Ì¬
+ * @brief å¤„ç†å‘¨æœŸæ€§ä»»åŠ¡ï¼Œå¦‚Modbusæ•°æ®å¤„ç†ã€LEDæ§åˆ¶ã€ç³»ç»Ÿç›‘æ§å’ŒYmodemè¶…æ—¶å¤„ç†ã€‚
+ * @param pt åç¨‹çŠ¶æ€
+ * @return åç¨‹æ‰§è¡ŒçŠ¶æ€
  * @date 2024-01-31
  */
 static int Task3_period_process(struct pt *pt)
@@ -135,11 +114,13 @@ static int Task3_period_process(struct pt *pt)
     PT_BEGIN(pt);
     while (1)
     {
+#if IsApplication
         mbs_data_process();
+        music_config();
+#endif
         LedCtrl();
         SysMonitor();
         Ymodem_timeout_process();
-        MbsDataSave();
         PT_TIMER_DELAY(pt, 100);
     }
     PT_END(pt);
@@ -148,7 +129,7 @@ static int Task3_period_process(struct pt *pt)
 static bool IapPacketCheck()
 {
     static uint8_t upFrame[8] = {0xFF, MBS_SelfAddr, 0x50, 0xA5, 0x5A, 0x38, 0x26, 0xFE};
-    // ¼ì²éÊÕµ½µÄÊı¾İÊÇ·ñÆ¥ÅäIAPÌØ¶¨µÄÖ¡
+    // æ£€æŸ¥æ”¶åˆ°çš„æ•°æ®æ˜¯å¦åŒ¹é…IAPç‰¹å®šçš„å¸§
     if (uart_rs485_state.data_len == 8 && memcmp(uart_rs485_state.data, upFrame, 8) == 0)
     {
         flash_erase(IapAddr);
@@ -164,7 +145,7 @@ static bool IapPacketCheck()
     {
         return false;
     }
-#if !IsApp
+#if !IsApplication
     uint8_t TxBuffer[5];
     uint16_t TxLen = 0;
     int res = ymodem_packet_analysis(uart_rs485_state.data, uart_rs485_state.data_len, TxBuffer, &TxLen);
@@ -185,15 +166,15 @@ static bool IapPacketCheck()
 
 /**
  * Ymodem_timeout_process
- * @brief ´¦ÀíYmodemÍ¨ĞÅµÄ³¬Ê±Çé¿ö¡£
- * @note µ±Ymodem×´Ì¬·Ç¿ÕÏĞÇÒ³¬Ê±Ê±£¬·¢ËÍNAK»òCANÖ¸Áî£¬²¢ÔÚ´íÎó´ÎÊı¹ı¶àÊ±ÖØÖÃÏµÍ³¡£
+ * @brief å¤„ç†Ymodemé€šä¿¡çš„è¶…æ—¶æƒ…å†µã€‚
+ * @note å½“YmodemçŠ¶æ€éç©ºé—²ä¸”è¶…æ—¶æ—¶ï¼Œå‘é€NAKæˆ–CANæŒ‡ä»¤ï¼Œå¹¶åœ¨é”™è¯¯æ¬¡æ•°è¿‡å¤šæ—¶é‡ç½®ç³»ç»Ÿã€‚
  * @date 2024-01-31
  */
 static void Ymodem_timeout_process()
 {
 #if !Lora_Is_APP
     if (ymodem_session.state != YMODEM_STATE_IDLE)
-    { // ·Ç¿ÕÏĞ×´Ì¬ÏÂµÄYmodem³¬Ê±´¦Àí
+    { // éç©ºé—²çŠ¶æ€ä¸‹çš„Ymodemè¶…æ—¶å¤„ç†
         uint8_t temp[2];
         ymodem_session.timeout++;
         if (ymodem_session.timeout > 30)
@@ -217,53 +198,190 @@ static void Ymodem_timeout_process()
 
 /**
  * mbs_data_process
- * @brief ´¦ÀíModbusÊı¾İºÍºìÍâÖ¸ÁîµÄ¼ä¸ôÊ±¼ä¿ØÖÆ¡£
- * @note ¸Ãº¯Êı¿ØÖÆºìÍâÖ¸ÁîµÄ·¢ËÍ¼ä¸ô£¬±ÜÃâÆµ·±·¢ËÍµ¼ÖÂµÄÎÊÌâ¡£
+ * @brief å¤„ç†Modbusæ•°æ®å’Œè“ç‰™æŒ‡ä»¤çš„é—´éš”æ—¶é—´æ§åˆ¶ã€‚
+ * @note è¯¥å‡½æ•°æ§åˆ¶è“ç‰™æŒ‡ä»¤çš„å‘é€é—´éš”ï¼Œé¿å…é¢‘ç¹å‘é€å¯¼è‡´çš„é—®é¢˜ã€‚
  * @date 2024-01-31
  */
 static void mbs_data_process()
 {
-    uint32_t data;
-    if (IR_state.Brand != mbsHoldRegValue[Reg_IR_Brand].pData)
+    static uint8_t Init_flag = 1;
+    static uint32_t count_100ms = 0;
+    if (Init_flag == 1)
     {
-        write_buffer(IR_BrandSet << 16 | mbsHoldRegValue[Reg_IR_Brand].pData);
-        IR_state.Brand = mbsHoldRegValue[Reg_IR_Brand].pData;
-    }
-    if (IR_state.CmdInterval > 0)
-    {
-        IR_state.CmdInterval--;
-        return;
-    }
-    if (read_buffer(&data))
-    {
-        IR_state.waitAck = (data >> 16) & 0xFF;
-        IR_state.waitAckSub = (data >> 8) & 0xFF;
-        if (IR_state.waitAck == IR_AirConCtrl)
+        for (uint8_t i = 0; i < 6; i++)
         {
-            IR_state.CmdInterval = 15;
+            bleState.Mac[i] = mbsHoldRegValue[Reg_BleMac + i].pData;
         }
-        else if (IR_state.waitAck == IR_BrandStudyMode)
+        if (mbsCoilValue[Coil_BleMode].pData == BleMode)
         {
-            IR_state.CmdInterval = 100; // 10s
+            char temp[32];
+            sprintf(temp, "AT+SP%02X%02X%02X%02X%02X%02X\r\n", bleState.Mac[0], bleState.Mac[1], bleState.Mac[2],
+                    bleState.Mac[3], bleState.Mac[4], bleState.Mac[5]);
+            BleCmdSend(temp);
+            PowerOff();
+        }
+        else
+            PowerOn();
+        Init_flag = 0;
+    }
+    if (count_100ms % 100 == 10)
+    {
+        BleCmdSend("AT+RN\r\n"); // æŸ¥è“ç‰™ä½¿èƒ½
+    }
+    if (mbsCoilValue[Coil_BleMode].pData == BleMode)
+    {
+        if (count_100ms % 100 == 20)
+        {
+            BleCmdSend("AT+RS\r\n"); // æŸ¥è“ç‰™è¿æ¥çŠ¶æ€
+        }
+        if (count_100ms % 100 == 30)
+        {
+            BleCmdSend("AT+TQ01\r\n"); // æŸ¥è“ç‰™MAC
+        }
+    }
+    if (mbsCoilValue[Coil_BleReset].pData)
+    {
+        BleCmdSend("AT+CZ\r\n");
+        delay_ms(50);
+        NVIC_SystemReset();
+    }
+    else if (mbsCoilValue[Coil_BleMode].pData == bleState.IsEnable && count_100ms % 10 == 5)
+    {
+        if (mbsCoilValue[Coil_BleMode].pData == BleMode)
+        {
+            BleCmdSend("AT+SF01\r\n");
+            bleState.IsEnable = 1;
+            PowerOff();
         }
         else
         {
-            IR_state.CmdInterval = 2; // 200ms
+            BleCmdSend("AT+SF02\r\n");
+            bleState.IsEnable = 0;
+            PowerOn();
         }
-        ir_cmd_send((data >> 16) & 0xFF, (data >> 8) & 0xFF, data & 0xFF);
+        FlashDataSave();
     }
+    else if (mbsCoilValue[Coil_BleReConnect].pData)
+    {
+        bleState.IsConnected = false;
+        mbsCoilValue[Coil_BleReConnect].pData = 0;
+        char temp[32];
+        sprintf(temp, "AT+SP%02X%02X%02X%02X%02X%02X\r\n", bleState.Mac[0], bleState.Mac[1], bleState.Mac[2],
+                bleState.Mac[3], bleState.Mac[4], bleState.Mac[5]);
+        BleCmdSend(temp);
+    }
+    else
+    {
+        for (uint8_t i = 0; i < 6; i++)
+        {
+            if (bleState.Mac[i] != mbsHoldRegValue[Reg_BleMac + i].pData)
+            {
+                for (uint8_t j = 0; j < 6; j++)
+                {
+                    bleState.Mac[j] = mbsHoldRegValue[Reg_BleMac + j].pData;
+                }
+                char temp[32];
+                sprintf(temp, "AT+SP%02X%02X%02X%02X%02X%02X\r\n", bleState.Mac[0], bleState.Mac[1], bleState.Mac[2],
+                        bleState.Mac[3], bleState.Mac[4], bleState.Mac[5]);
+                BleCmdSend(temp);
+                bleState.IsConnected = false;
+                FlashDataSave();
+                break;
+            }
+        }
+    }
+    count_100ms++;
 }
 
+void music_config()
+{
+    static uint8_t init_flag = 1;
+    static uint32_t count_100ms = 0;
+    if ((!bleState.IsEnable) || (bleState.IsEnable && bleState.IsConnected))
+    {
+        if (init_flag == 1) // åˆå§‹åŒ–
+        {
+            init_flag = 0;
+            mbsCoilValue[Coil_MusicPause].pData = 0;
+            musicState.isPlay = 0;
+            musicState.mode = mbsCoilValue[Coil_MusicMode].pData;
+        }
+        if (mbsCoilValue[Coil_MusicPause].pData != musicState.isPlay) // æ’­æ”¾æš‚åœ
+        {
+            musicState.isPlay = mbsCoilValue[Coil_MusicPause].pData;
+            BleCmdSend("AT+CB\r\n");
+        }
+        else if (mbsHoldRegValue[Reg_Volume].pData != musicState.volume) // éŸ³é‡
+        {
+            musicState.volume = mbsHoldRegValue[Reg_Volume].pData;
+            char temp[32];
+            if (musicState.volume > 30)
+                musicState.volume = 30;
+            if (musicState.volume >= 10)
+                sprintf(temp, "AT+CA%d\r\n", musicState.volume);
+            else
+                sprintf(temp, "AT+CA0%d\r\n", musicState.volume);
+            BleCmdSend(temp);
+        }
+        else if (mbsCoilValue[Coil_MusicMode].pData != musicState.mode) // æ’­æ”¾æ¨¡å¼
+        {
+            musicState.mode = mbsCoilValue[Coil_MusicMode].pData;
+            if (mbsCoilValue[Coil_MusicMode].pData)
+            {
+                BleCmdSend("AT+AC02\r\n");
+            }
+            else
+            {
+                BleCmdSend("AT+AC00\r\n");
+            }
+            FlashDataSave();
+        }
+        else if (mbsCoilValue[Coil_NextMusic].pData) // ä¸‹ä¸€é¦–
+        {
+            mbsCoilValue[Coil_NextMusic].pData = 0;
+            BleCmdSend("AT+CC\r\n");
+        }
+        else if (mbsCoilValue[Coil_LastMusic].pData) // ä¸Šä¸€é¦–
+        {
+            mbsCoilValue[Coil_LastMusic].pData = 0;
+            BleCmdSend("AT+CD\r\n");
+        }
+        else if (mbsCoilValue[Coil_MusicChange].pData) // æŒ‡å®šåˆ‡æ¢æŸä¸€é¦–
+        {
+            mbsCoilValue[Coil_MusicChange].pData = 0;
+            char temp[32];
+            sprintf(temp, "AT+AB%d\r\n", mbsHoldRegValue[Reg_LoopIndex].pData);
+            BleCmdSend(temp);
+            if (mbsCoilValue[Coil_MusicMode].pData == 0)
+            {
+                BleCmdSend("AT+AC00\r\n");
+            }
+            FlashDataSave();
+        }
+        else if(count_100ms % 100 == 40)
+        {
+            BleCmdSend("AT+MP\r\n");
+        }
+        else if(count_100ms % 100 == 50) 
+        {
+            if(musicState.mode)
+                BleCmdSend("AT+AC02\r\n");
+            else
+                BleCmdSend("AT+AC00\r\n");
+        }
+        count_100ms++;
+    }
+}
 /**
  * LedCtrl
- * @brief ¿ØÖÆLEDµÄÉÁË¸£¬²»Í¬Ä£Ê½ÏÂÉÁË¸ÆµÂÊ²»Í¬¡£
- * @note ÔÚÓ¦ÓÃ³ÌĞòÄ£Ê½ÏÂ£¬LEDÃ¿¸ô1ÃëÉÁË¸Ò»´Î£»ÔÚÆäËûÄ£Ê½ÏÂ£¬Ã¿¸ô0.5ÃëÉÁË¸Ò»´Î¡£
+ * @brief æ§åˆ¶LEDçš„é—ªçƒï¼Œä¸åŒæ¨¡å¼ä¸‹é—ªçƒé¢‘ç‡ä¸åŒã€‚
+ * @note åœ¨åº”ç”¨ç¨‹åºæ¨¡å¼ä¸‹ï¼ŒLEDæ¯éš”1ç§’é—ªçƒä¸€æ¬¡ï¼›åœ¨å…¶ä»–æ¨¡å¼ä¸‹ï¼Œæ¯éš”0.5ç§’é—ªçƒä¸€æ¬¡ã€‚
  * @date 2024-01-31
  */
 static void LedCtrl()
 {
     static uint8_t count = 0;
-#if IsApp
+#if IsApplication
     if (count % 10 == 0)
     {
         SysLedOn();
@@ -283,8 +401,8 @@ static void LedCtrl()
 
 /**
  * SysMonitor
- * @brief ÏµÍ³¼à¿Øº¯Êı£¬¼ì²âModbusÍ¨ĞÅÊÇ·ñ³¬Ê±²¢Ö´ĞĞ¿´ÃÅ¹·ÖØÔØ¡£
- * @note Èç¹ûModbusÍ¨ĞÅ³¬Ê±£¬ÔòÖØÖÃÏµÍ³¡£
+ * @brief ç³»ç»Ÿç›‘æ§å‡½æ•°ï¼Œæ£€æµ‹Modbusé€šä¿¡æ˜¯å¦è¶…æ—¶å¹¶æ‰§è¡Œçœ‹é—¨ç‹—é‡è½½ã€‚
+ * @note å¦‚æœModbusé€šä¿¡è¶…æ—¶ï¼Œåˆ™é‡ç½®ç³»ç»Ÿã€‚
  * @date 2024-01-31
  */
 static void SysMonitor()
@@ -307,25 +425,4 @@ static void SysMonitor()
     IWDG_ReloadCounter();
 }
 
-/**
- * MbsDataSave
- * @brief Modbus¿Õµ÷²ÎÊıÖÜÆÚ±£´æÔÚflashÄÚ
- * @note ±£´æ¿Õµ÷²ÎÊıµ½flashÄÚ
- * @date 2024-01-31
- */
-static void MbsDataSave()
-{
-    static uint32_t count = 0;
-    if (count++ >= 100)
-    {
-        if (mbsHoldRegValue[Reg_IR_Temp].pData != IR_state.aircon_state.Temp || mbsHoldRegValue[Reg_IR_Mode].pData != IR_state.aircon_state.Mode || mbsHoldRegValue[Reg_IR_WindSpeed].pData != IR_state.aircon_state.WindSpeed)
-        {
-            IR_state.aircon_state.Temp = mbsHoldRegValue[Reg_IR_Temp].pData;
-            IR_state.aircon_state.Mode = mbsHoldRegValue[Reg_IR_Mode].pData;
-            IR_state.aircon_state.WindSpeed = mbsHoldRegValue[Reg_IR_WindSpeed].pData;
-            FlashDataSave(2);
-        }
-        count = 0;
-    }
-}
 #pragma pop

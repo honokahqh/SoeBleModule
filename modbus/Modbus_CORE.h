@@ -22,16 +22,16 @@
 #define MBS_FRAME_BYTE_NUM				      (6)
 /***************************************************************/
 typedef enum{
-  MBS_EX_NONE = 0x00,	                /*�޴���*/
-  MBS_EX_ILLEGAL_FUNCTION = 0x01,     /*��֧�ֵĲ�������*/
-  MBS_EX_ILLEGAL_DATA_ADDRESS = 0x02, /*�Ƿ��Ĳ�����ַ*/
-  MBS_EX_ILLEGAL_DATA_VALUE = 0x03,   /*�Ƿ��Ĳ�����ֵ*/
-  MBS_EX_SLAVE_DEVICE_FAILURE = 0x04, /*�豸����*/
-  MBS_EX_ACKNOWLEDGE = 0x05,          /*ȷ��*/
-  MBS_EX_SLAVE_BUSY = 0x06,           /*���豸æ*/
-  MBS_EX_MEMORY_PARITY_ERROR = 0x08,  /*�洢��ż�Բ��*/
-  MBS_EX_GATEWAY_PATH_FAILED = 0x0A,  /*����������·��*/
-  MBS_EX_GATEWAY_TGT_FAILED = 0x0B,   /*����Ŀ���豸��Ӧʧ��*/
+  MBS_EX_NONE = 0x00,	               
+  MBS_EX_ILLEGAL_FUNCTION = 0x01,    
+  MBS_EX_ILLEGAL_DATA_ADDRESS = 0x02, 
+  MBS_EX_ILLEGAL_DATA_VALUE = 0x03,   
+  MBS_EX_SLAVE_DEVICE_FAILURE = 0x04, 
+  MBS_EX_ACKNOWLEDGE = 0x05,         
+  MBS_EX_SLAVE_BUSY = 0x06,           
+  MBS_EX_MEMORY_PARITY_ERROR = 0x08, 
+  MBS_EX_GATEWAY_PATH_FAILED = 0x0A,  
+  MBS_EX_GATEWAY_TGT_FAILED = 0x0B,   
 }MBS_EX_STATE;
 /***************************************************************/
 typedef struct{
@@ -48,8 +48,8 @@ extern MBS_PortFrameTypes	MBS_Buf;
 
 typedef struct
 {
-	uint16				coilAddr;		//��Ȧ��ַ
-	uint16				pData;		//��Ȧ����ֵ 
+	uint16				coilAddr;		
+	uint16				pData;		
 }MBS_CoilValueTypes;
 extern MBS_CoilValueTypes       mbsCoilValue[USER_COIL_NUM];
 
@@ -62,8 +62,8 @@ typedef struct {
 
 typedef struct
 {
-    uint16                   regAddr;       //���ּĴ�����ַ
-    uint16                   pData;        //���ּĴ�������
+    uint16                   regAddr;      
+    uint16                   pData;       
 }MBS_HoldRegValueTypes;
 extern MBS_HoldRegValueTypes       mbsHoldRegValue[USER_HOLDREG_NUM];
 

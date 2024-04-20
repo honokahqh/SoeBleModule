@@ -3,14 +3,14 @@
 
 #include "main.h"
 
-#define YMODEM_SOH 0x01        // Start of Header
-#define YMODEM_STX 0x02        // Start of Text
-#define YMODEM_EOT 0x04        // End of Transmission
-#define YMODEM_ACK 0x06        // Acknowledge
-#define YMODEM_NAK 0x15        // Negative Acknowledge
-#define YMODEM_CAN 0x18        // Cancel
+#define YMODEM_SOH 0x01 // Start of Header
+#define YMODEM_STX 0x02 // Start of Text
+#define YMODEM_EOT 0x04 // End of Transmission
+#define YMODEM_ACK 0x06 // Acknowledge
+#define YMODEM_NAK 0x15 // Negative Acknowledge
+#define YMODEM_CAN 0x18 // Cancel
 #define YMODEM_CRC 0x43 // ASCII "C", used to request CRC mode
-#define YMODEM_SUB 0x1A        // Substitute (used for padding)
+#define YMODEM_SUB 0x1A // Substitute (used for padding)
 
 #define YMODEM_STATE_IDLE 0  // 空闲状态，没有传输正在进行
 #define YMODEM_STATE_INIT 1  // 初始化状态，准备开始新的传输

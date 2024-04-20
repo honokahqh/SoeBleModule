@@ -47,4 +47,4 @@ ircontrol\stm32f0xx_it.o: ..\modbus\Modbus_USER.h
 ircontrol\stm32f0xx_it.o: ..\modbus\Modbus_hook.h
 ircontrol\stm32f0xx_it.o: ..\user\bsp_driver.h
 ircontrol\stm32f0xx_it.o: ..\user\ringbuffer.h
-ircontrol\stm32f0xx_it.o: ..\user\ir_ctrl.h
+ircontrol\stm32f0xx_it.o: ..\user\ble_driver.h

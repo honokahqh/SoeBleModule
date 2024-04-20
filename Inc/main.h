@@ -14,9 +14,10 @@
 #include "Modbus_CORE.h"
 #include "bsp_driver.h"
 #include "ringbuffer.h"
-#include "ir_ctrl.h"
+#include "ble_driver.h"
 
-#define IsApp	 0
+#define IsApplication	 1
+
 extern uint32_t sys_ms;
 
 void delay_ms(__IO uint32_t nTime);

@@ -7,55 +7,57 @@ static void IapCheck(void);
 
 /**
  * main
- * @brief Ö÷º¯Êı£¬¸ºÔğÏµÍ³³õÊ¼»¯ºÍ³ÌĞòÆô¶¯¡£
+ * @brief ä¸»å‡½æ•°ï¼Œè´Ÿè´£ç³»ç»Ÿåˆå§‹åŒ–å’Œç¨‹åºå¯åŠ¨ã€‚
  * @author Honokahqh
  * @date 2024-1-31
  */
 int main()
 {
-#if IsApp
-    for (uint8_t i = 0; i < 48; i++) // Ó³ÉäÖĞ¶ÏÏòÁ¿µ½ RAMÇøµÄ0x20000000ÎªÊ¼µÄ48¸ö×ÖÖĞ
+#if IsApplication
+    for (uint8_t i = 0; i < 48; i++) // æ˜ å°„ä¸­æ–­å‘é‡åˆ° RAMåŒºçš„0x20000000ä¸ºå§‹çš„48ä¸ªå­—ä¸­
     {
         *((uint32_t *)(0x20000000 + (i << 2))) = *(volatile unsigned int *)(AppAddr + (i << 2));
     }
-    SYSCFG_MemoryRemapConfig(SYSCFG_MemoryRemap_SRAM); // ½«Èë¿ÚµØÖ·Ó³Éä³ÉÎªSRAM
+    SYSCFG_MemoryRemapConfig(SYSCFG_MemoryRemap_SRAM); // å°†å…¥å£åœ°å€æ˜ å°„æˆä¸ºSRAM
     RCC_APB2PeriphResetCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 #endif
-    // ¸üĞÂÏµÍ³Ê±ÖÓ
+    // æ›´æ–°ç³»ç»Ÿæ—¶é’Ÿ
     SystemCoreClockUpdate();
-    // ÅäÖÃÏµÍ³µÎ´ğ¶¨Ê±Æ÷
+    // é…ç½®ç³»ç»Ÿæ»´ç­”å®šæ—¶å™¨
     SysTick_Config(48000000 / 1000);
-    // ³õÊ¼»¯¿´ÃÅ¹·
-//    watchDog_init();
-	// ³õÊ¼»¯GPIO
+    // åˆå§‹åŒ–çœ‹é—¨ç‹—
+    // watchDog_init();
+    // åˆå§‹åŒ–GPIO
     gpio_init();
-    // ³õÊ¼»¯UART
+    // åˆå§‹åŒ–UART
     uart_init();
-    // ¼ì²éÊÇ·ñĞèÒª½øĞĞIAP£¨In-Application Programming£©
+    // æ£€æŸ¥æ˜¯å¦éœ€è¦è¿›è¡ŒIAPï¼ˆIn-Application Programmingï¼‰
     IapCheck();
-    // ³õÊ¼»¯ModBusÓ³Éä
+    // åˆå§‹åŒ–ModBusæ˜ å°„
+#if IsApplication
     MBS_MappingInit();
-    // ¶ÁÈ¡FlashÊı¾İ
+    // è¯»å–Flashæ•°æ®
     FlashDataRead();
-    // ÔËĞĞÏµÍ³
+#endif
+    // è¿è¡Œç³»ç»Ÿ
     system_run();
-}	
+}
 
 /**
  * IapCheck
- * @brief ¼ì²éÊÇ·ñĞèÒªÖ´ĞĞIAP£¨In-Application Programming£©£¬²¢¸ù¾İÌõ¼şÌø×ª»òÖ´ĞĞÏà¹Ø²Ù×÷¡£
- * @note ´Ëº¯Êı°üº¬¶ÔFlashµÄ²Ù×÷ºÍÅĞ¶ÏÂß¼­£¬ÓÃÓÚ¾ö¶¨ÊÇ·ñ½øĞĞ¹Ì¼şÉı¼¶»òÌø×ªµ½Ó¦ÓÃ³ÌĞò¡£
+ * @brief æ£€æŸ¥æ˜¯å¦éœ€è¦æ‰§è¡ŒIAPï¼ˆIn-Application Programmingï¼‰ï¼Œå¹¶æ ¹æ®æ¡ä»¶è·³è½¬æˆ–æ‰§è¡Œç›¸å…³æ“ä½œã€‚
+ * @note æ­¤å‡½æ•°åŒ…å«å¯¹Flashçš„æ“ä½œå’Œåˆ¤æ–­é€»è¾‘ï¼Œç”¨äºå†³å®šæ˜¯å¦è¿›è¡Œå›ºä»¶å‡çº§æˆ–è·³è½¬åˆ°åº”ç”¨ç¨‹åºã€‚
  * @author Honokahqh
  * @date 2023-08-05
  */
 static void IapCheck()
 {
     uint16_t Data16;
-#if !IsApp
-    // Èç¹ûÔÚIAPµØÖ·´¦µÄÊı¾İÊÇ0xFFFF£¬±íÊ¾ÊÇµÚÒ»´ÎÆô¶¯
+#if !IsApplication
+    // å¦‚æœåœ¨IAPåœ°å€å¤„çš„æ•°æ®æ˜¯0xFFFFï¼Œè¡¨ç¤ºæ˜¯ç¬¬ä¸€æ¬¡å¯åŠ¨
     if (*(uint16_t *)IapAddr == 0xFFFF)
     {
-        // ÔÚIAPµØÖ·´¦Ğ´Èë±êÖ¾£¬×¼±¸Ìø×ªµ½Ó¦ÓÃ³ÌĞò
+        // åœ¨IAPåœ°å€å¤„å†™å…¥æ ‡å¿—ï¼Œå‡†å¤‡è·³è½¬åˆ°åº”ç”¨ç¨‹åº
         Data16 = 0x55;
         flash_write_halfword(IapAddr, Data16);
         Data16 = 0x55;
@@ -63,46 +65,46 @@ static void IapCheck()
         LOG_I(TAG, "First power on, jump to App\r\n");
         jumpToApplication(AppAddr);
     }
-    // Èç¹ûIAP±êÖ¾±»ÉèÖÃ£¬±íÊ¾ĞèÒªÖ´ĞĞ¹Ì¼şÉı¼¶
+    // å¦‚æœIAPæ ‡å¿—è¢«è®¾ç½®ï¼Œè¡¨ç¤ºéœ€è¦æ‰§è¡Œå›ºä»¶å‡çº§
     else if (*(uint16_t *)IapAddr == 0x55 && *(uint16_t *)(IapAddr + 2) == 0xAA && *(uint16_t *)(IapAddr + 4) == 0xFFFF)
     {
-        // ÉèÖÃIAP½ø¶È±êÖ¾
+        // è®¾ç½®IAPè¿›åº¦æ ‡å¿—
         Data16 = 0xFA;
         flash_write_halfword(IapAddr + 4, Data16);
         LOG_I(TAG, "IAP Start\r\n");
-        // ³õÊ¼»¯ymodemĞ­Òé×¼±¸¹Ì¼şÉı¼¶
+        // åˆå§‹åŒ–ymodemåè®®å‡†å¤‡å›ºä»¶å‡çº§
         ymodem_init();
         ymodem_session.state = YMODEM_STATE_START;
-        // ²Á³ıÓ¦ÓÃ³ÌĞòÇøÓòµÄFlash
+        // æ“¦é™¤åº”ç”¨ç¨‹åºåŒºåŸŸçš„Flash
         for (uint32_t i = 0; i < 16; i++)
         {
             flash_erase(AppAddr + i * 1024);
         }
     }
-    // Èç¹ûÊÇÕı³£ÖØÆô£¬Ìø×ªµ½Ó¦ÓÃ³ÌĞò
+    // å¦‚æœæ˜¯æ­£å¸¸é‡å¯ï¼Œè·³è½¬åˆ°åº”ç”¨ç¨‹åº
     else if (*(uint16_t *)(IapAddr + 6) == 0x55)
     {
         LOG_I(TAG, "Normal Reboot, jump to App\r\n");
         jumpToApplication(AppAddr);
     }
-    // Èç¹û²»Âú×ãÒÔÉÏÌõ¼ş£¬±íÊ¾IAPÊ§°Ü
+    // å¦‚æœä¸æ»¡è¶³ä»¥ä¸Šæ¡ä»¶ï¼Œè¡¨ç¤ºIAPå¤±è´¥
     else
     {
         LOG_E(TAG, "IAP failed\r\n");
     }
 #else
-    // ÔÚÓ¦ÓÃ³ÌĞòÄ£Ê½ÏÂµÄ´¦ÀíÂß¼­
+    // åœ¨åº”ç”¨ç¨‹åºæ¨¡å¼ä¸‹çš„å¤„ç†é€»è¾‘
     if (*(uint16_t *)(IapAddr + 6) != 0x55)
     {
-        if(*(uint16_t *)(IapAddr + 6) != 0xFFFF)
+        if (*(uint16_t *)(IapAddr + 6) != 0xFFFF)
             flash_erase(IapAddr);
         LOG_I(TAG, "first power on or IAP success, write app run flag\r\n");
-        // ÉèÖÃÓ¦ÓÃ³ÌĞòÔËĞĞ±êÖ¾
+        // è®¾ç½®åº”ç”¨ç¨‹åºè¿è¡Œæ ‡å¿—
         Data16 = 0x55;
         flash_write_halfword(IapAddr + 6, Data16);
     }
 #endif
-	if (ymodem_session.state == YMODEM_STATE_IDLE)
+    if (ymodem_session.state == YMODEM_STATE_IDLE)
     {
         delay_ms(200);
         uint8_t StartFrame[] = {0xFF, 0x6F, 0xFE};
