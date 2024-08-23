@@ -22,17 +22,36 @@ Dialog DLL:      TARMCM1.DLL V1.14.4.0
  
 <h2>Project:</h2>
 E:\work\Z9 Module\À¶ÑÀÄ£¿é\org\MDK-ARM\IRControl.uvprojx
-Project File Date:  04/20/2024
+Project File Date:  04/23/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\Software\MDK5.27\ARM\ARMCC\Bin'
 Build target 'IRControl'
 compiling main.c...
+..\user\ble_driver.h(32): warning:  #1295-D: Deprecated declaration executeBleCommand - give arg types
+  void executeBleCommand();
+../Src/main.c(44): warning:  #167-D: argument of type "char *" is incompatible with parameter of type "uint8_t *"
+      UartBleSendData(temp_data, sizeof(temp_data));
+../Src/main.c: 2 warnings, 0 errors
+compiling app.c...
+..\user\ble_driver.h(32): warning:  #1295-D: Deprecated declaration executeBleCommand - give arg types
+  void executeBleCommand();
+..\user\app.c(65): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
+          parseAndHandleCommand(bleBuffer);
+..\user\app.c(55): warning:  #177-D: function "Task1_uart_ble"  was declared but never referenced
+  static int Task1_uart_ble(struct pt *pt)
+..\user\app.c(221): warning:  #177-D: function "mbs_data_process"  was declared but never referenced
+  static void mbs_data_process()
+..\user\app.c(21): warning:  #177-D: function "MbsDataSave"  was declared but never referenced
+  static void MbsDataSave(void);
+..\user\app.c(328): warning:  #177-D: function "music_config"  was declared but never referenced
+  void music_config()
+..\user\app.c: 6 warnings, 0 errors
 linking...
-Program Size: Code=12564 RO-data=908 RW-data=224 ZI-data=2176  
+Program Size: Code=7100 RO-data=736 RW-data=120 ZI-data=1848  
 FromELF: creating hex file...
 After Build - User command #1: fromelf.exe --bin --output=IRControl.bin IRControl\IRControl.axf
-"IRControl\IRControl.axf" - 0 Error(s), 0 Warning(s).
+"IRControl\IRControl.axf" - 0 Error(s), 8 Warning(s).
 
 <h2>Software Packages used:</h2>
 

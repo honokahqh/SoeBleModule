@@ -275,8 +275,8 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8002000</StartAddress>
-                <Size>0x4000</Size>
+                <StartAddress>0x8000000</StartAddress>
+                <Size>0x2000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -454,11 +454,6 @@
               <FilePath>..\Inc\main.h</FilePath>
             </File>
             <File>
-              <FileName>log.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\Airctrl_IR\Aircon IR\user\log.h</FilePath>
-            </File>
-            <File>
               <FileName>ble_driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\ble_driver.c</FilePath>
@@ -467,6 +462,11 @@
               <FileName>ble_driver.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\ble_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>log.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\log.h</FilePath>
             </File>
           </Files>
         </Group>

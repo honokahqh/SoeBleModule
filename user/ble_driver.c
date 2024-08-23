@@ -5,9 +5,9 @@
 
 #define TAG "Ble Cmd Process"
 
-bleState_t bleState; // Êµ¼Ê²ÎÊýÓëÄ¿±ê²ÎÊý
+bleState_t bleState; // å®žé™…å‚æ•°ä¸Žç›®æ ‡å‚æ•°
 musicState_t musicState;
-// ´¦Àíº¯ÊýÇ°ÖÃÉùÃ÷
+// å¤„ç†å‡½æ•°å‰ç½®å£°æ˜Ž
 void handleCommand(char *cmd);
 void handleOK(char *str, uint16_t len);
 void handleIsConnected(char *str, uint16_t len);
@@ -28,19 +28,19 @@ typedef struct
     BleCmd_Handler handler;
 } BleCommand;
 
-// ÃüÁîµ½´¦Àíº¯ÊýµÄÓ³Éä
+// å‘½ä»¤åˆ°å¤„ç†å‡½æ•°çš„æ˜ å°„
 BleCommand Commands[] = {
     {"OK", handleOK},
-    {"RS+", handleIsConnected}, // À¶ÑÀÁ¬½Ó×´Ì¬ Î´ËÑË÷-RS+00 ÕýÔÚËÑË÷-RS+01	ÒÑÁ¬½Ó-RS+03
-    {"RN+", handleIsBleMode},   // ÊÇ·ñÎªÀ¶ÑÀ  ÓÐÏßÄ£Ê½-RN+00 À¶ÑÀÄ£Ê½-RN+01
-    {"RT+", handleSearchMode},  // ËÑË÷·½Ê½  Î´ÉèÖÃËÑË÷Ä£Ê½-RT+00 Ëæ»úËÑË÷-RT+01 MACËÑË÷-RT+02
-    {"TQ+", handleTQ},          // À¶ÑÀMACµØÖ· TQ+775651ACAB48
-    {"M1+", handleM1},          // µ±Ç°ÎÄ¼þË÷Òý M1+00000001
-    {"M2+", handleM2},          // ×ÜÎÄ¼þÊý  M2+00000025
-    {"MP+", handleMP},          // ²¥·Å×´Ì¬  ²¥·Å-MP+01 ÔÝÍ£-MP+02
-    {"MT+", handleMT},          // ²¥·ÅÎÄ¼þÊ±³¤  MT+000000AD
-    {"MT+", handleMK},          // µ±Ç°ÎÄ¼þ²¥·Å½ø¶È  MK+000000AD
-    {NULL, NULL}                // ÁÐ±í½áÊø±êÖ¾
+    {"RS+", handleIsConnected}, // è“ç‰™è¿žæŽ¥çŠ¶æ€ æœªæœç´¢-RS+00 æ­£åœ¨æœç´¢-RS+01	å·²è¿žæŽ¥-RS+03
+    {"RN+", handleIsBleMode},   // æ˜¯å¦ä¸ºè“ç‰™  æœ‰çº¿æ¨¡å¼-RN+00 è“ç‰™æ¨¡å¼-RN+01
+    {"RT+", handleSearchMode},  // æœç´¢æ–¹å¼  æœªè®¾ç½®æœç´¢æ¨¡å¼-RT+00 éšæœºæœç´¢-RT+01 MACæœç´¢-RT+02
+    {"TQ+", handleTQ},          // è“ç‰™MACåœ°å€ TQ+775651ACAB48
+    {"M1+", handleM1},          // å½“å‰æ–‡ä»¶ç´¢å¼• M1+00000001
+    {"M2+", handleM2},          // æ€»æ–‡ä»¶æ•°  M2+00000025
+    {"MP+", handleMP},          // æ’­æ”¾çŠ¶æ€  æ’­æ”¾-MP+01 æš‚åœ-MP+02
+    {"MT+", handleMT},          // æ’­æ”¾æ–‡ä»¶æ—¶é•¿  MT+000000AD
+    {"MT+", handleMK},          // å½“å‰æ–‡ä»¶æ’­æ”¾è¿›åº¦  MK+000000AD
+    {NULL, NULL}                // åˆ—è¡¨ç»“æŸæ ‡å¿—
 };
 
 void parseAndHandleCommand(char *packet)
@@ -88,7 +88,7 @@ int ascii2int(char *str, uint8_t len)
     return data;
 }
 
-// ÊµÏÖÊ£ÓàµÄ´¦Àíº¯Êý...
+// å®žçŽ°å‰©ä½™çš„å¤„ç†å‡½æ•°...
 void handleOK(char *str, uint16_t len)
 {
     LOG_I(TAG, "handleOK\r\n");
@@ -109,7 +109,8 @@ void handleIsConnected(char *str, uint16_t len)
             LOG_I(TAG, "Bluetooth connecting\r\n");
         else
             LOG_I(TAG, "Unknown Bluetooth connection status:%d\r\n", data);
-        bleState.IsConnected = false; // ÓÉÖ÷Ïß³ÌÖÜÆÚÖØÁ¬½Ó
+        bleState.IsConnected = false; // ç”±ä¸»çº¿ç¨‹å‘¨æœŸé‡è¿žæŽ¥
+        mbsCoilValue[Coil_BleConnectState].pData = false;
     }
 }
 
@@ -136,13 +137,13 @@ void handleIsBleMode(char *str, uint16_t len)
     {
         LOG_I(TAG, "Bluetooth down\r\n");
         if (bleState.IsEnable != (!mbsCoilValue[Coil_BleMode].pData))
-            BleCmdSend("AT+SF02\r\n"); // ÅäÖÃÎªÓÐÏß
+            writeBluetoothCommand("AT+SF02\r\n"); // é…ç½®ä¸ºæœ‰çº¿
     }
     else if (data == 1)
     {
         LOG_I(TAG, "Bluetooth enable\r\n");
         if (bleState.IsEnable != (!mbsCoilValue[Coil_BleMode].pData))
-            BleCmdSend("AT+SF01\r\n"); // ÅäÖÃÎªÀ¶ÑÀ
+            writeBluetoothCommand("AT+SF01\r\n"); // é…ç½®ä¸ºè“ç‰™
     }
     else
     {
@@ -172,14 +173,15 @@ void handleTQ(char *str, uint16_t len)
         {
             bleState.errCount++;
             if (bleState.errCount > ErrCountMax)
-            {   // ·ÀÖ¹ÕýÈ·Á¬½Ó,µ«ÊÇ´®¿ÚÍ¨Ñ¶±¨´íµ¼ÖÂµÄÖØÁ¬
+            { // é˜²æ­¢æ­£ç¡®è¿žæŽ¥,ä½†æ˜¯ä¸²å£é€šè®¯æŠ¥é”™å¯¼è‡´çš„é‡è¿ž
                 bleState.errCount = 0;
                 bleState.IsConnected = false;
+                mbsCoilValue[Coil_BleConnectState].pData = false;
                 LOG_I(TAG, "Ble mac error\r\n");
                 char temp[32];
                 sprintf(temp, "AT+SP%02X%02X%02X%02X%02X%02X\r\n", bleState.Mac[0], bleState.Mac[1], bleState.Mac[2],
                         bleState.Mac[3], bleState.Mac[4], bleState.Mac[5]);
-                BleCmdSend(temp);
+                writeBluetoothCommand(temp);
             }
         }
         else
@@ -188,14 +190,34 @@ void handleTQ(char *str, uint16_t len)
             char temp[32];
             sprintf(temp, "AT+SP%02X%02X%02X%02X%02X%02X\r\n", bleState.Mac[0], bleState.Mac[1], bleState.Mac[2],
                     bleState.Mac[3], bleState.Mac[4], bleState.Mac[5]);
-            BleCmdSend(temp);
+            writeBluetoothCommand(temp);
         }
     }
     else
     {
+        LOG_I(TAG, "Ble mac true");
+        if (!bleState.IsConnected)
+        {
+            char temp[32];
+            if (musicState.volume > 30)
+                musicState.volume = 30;
+            if (musicState.volume >= 10)
+                sprintf(temp, "AT+CA%d\r\n", musicState.volume);
+            else
+                sprintf(temp, "AT+CA0%d\r\n", musicState.volume);
+            writeBluetoothCommand(temp);
+            if (mbsCoilValue[Coil_MusicMode].pData)
+            {
+                writeBluetoothCommand("AT+AC02\r\n");
+            }
+            else
+            {
+                writeBluetoothCommand("AT+AC00\r\n");
+            }
+        }
         bleState.IsConnected = true;
         bleState.errCount = 0;
-        LOG_I(TAG, "Ble mac true");
+        mbsCoilValue[Coil_BleConnectState].pData = true;
     }
 }
 
@@ -243,20 +265,17 @@ void handleMK(char *str, uint16_t len)
     mbsHoldRegValue[Reg_MusicProgress].pData = data;
 }
 
-void BleCmdSend(char *cmd)
+void writeBluetoothCommand(char *cmd)
 {
-    static uint32_t lastOperationTime;
-    if (sys_ms - lastOperationTime < 100)
+    write_command(cmd);
+}
+
+void executeBleCommand()
+{
+    char cmd[20];
+    if (read_command(cmd) == 0)
     {
-        LOG_I(TAG, "Cmd too fast\r\n");
-        return;
+        LOG_I(TAG, "Send cmd:%s\r\n", cmd);
+        UartBleSendData((uint8_t *)cmd, strlen(cmd));
     }
-    LOG_I(TAG, "Send cmd:%s\r\n", cmd);
-    if (strlen(cmd) > 30)
-    {
-        LOG_E(TAG, "Cmd too long\r\n");
-        return;
-    }
-    UartBleSendData(cmd, strlen(cmd));
-    lastOperationTime = sys_ms;
 }

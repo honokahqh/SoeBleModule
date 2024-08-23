@@ -16,8 +16,8 @@
 #include "ringbuffer.h"
 #include "ble_driver.h"
 
-#define IsApplication	 1
-
+#define IsApplication	 0
+#define IsRelease        1 	// 测试中不要打开,防止死机等问题被开门狗复位
 extern uint32_t sys_ms;
 
 void delay_ms(__IO uint32_t nTime);

@@ -2,35 +2,34 @@
 
 #define TAG "RingBuffer"
 
-#define ringbuffer_size 20
-uint32_t data[ringbuffer_size];
-ring_buffer_t ring_buffer = {data, 0, 0, 0, 20}; // buffer head tail size
+ring_buffer_t ring_buffer;
 
-void write_buffer(uint32_t data)
+int write_command(char *command)
 {
-    if (ring_buffer.size < ring_buffer.maxsize)
+    if (ring_buffer.size == MAX_COMMANDS)
     {
-        ring_buffer.data[ring_buffer.tail] = data;
-        ring_buffer.tail = (ring_buffer.tail + 1) % ring_buffer.maxsize;
-        ring_buffer.size++;
+        LOG_E(TAG, "Buffer is full");
+        return -1;
     }
-    else
+    if (strlen(command) >= MAX_LENGTH)
     {
-        LOG_E(TAG, "buffer is full");
+        LOG_E(TAG, "Command is too long");
+        return -1;
     }
+    strcpy(ring_buffer.buffer[ring_buffer.tail], command);
+    ring_buffer.tail = (ring_buffer.tail + 1) % MAX_COMMANDS;    
+    ring_buffer.size++;
 }
 
-uint8_t read_buffer(uint32_t *data)
+int read_command(char *command)
 {
-    if (ring_buffer.size > 0)
+    if (ring_buffer.size == 0)
     {
-        *data = ring_buffer.data[ring_buffer.head];
-        ring_buffer.head = (ring_buffer.head + 1) % ring_buffer.maxsize;
-        ring_buffer.size--;
-        return 1;
+        // LOG_E(TAG, "Buffer is empty");
+        return -1;
     }
-    else
-    {
-        return 0;
-    }
+    strcpy(command, ring_buffer.buffer[ring_buffer.head]);
+    ring_buffer.head = (ring_buffer.head + 1) % MAX_COMMANDS;
+    ring_buffer.size--;
+    return 0;
 }

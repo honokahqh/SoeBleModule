@@ -9,10 +9,10 @@ void parseAndHandleCommand(char *packet);
 typedef struct 
 {
     /* data */
-    uint8_t IsEnable;   // 0:ÎŞÏß 1:ÓĞÏß
-    uint8_t IsConnected; // 0:Î´Á¬½Ó 1:ÒÑÁ¬½Ó
+    uint8_t IsEnable;   // 0:æ— çº¿ 1:æœ‰çº¿
+    uint8_t IsConnected; // 0:æœªè¿æ¥ 1:å·²è¿æ¥
     uint8_t Mac[Ble_mac_size]; 
-    uint8_t errCount;       // mac±¨´í´ÎÊı
+    uint8_t errCount;       // macæŠ¥é”™æ¬¡æ•°
 }bleState_t;
 extern bleState_t bleState;
 
@@ -21,13 +21,14 @@ typedef struct
     /* data */
     uint8_t isPlay;
     uint8_t volume;
-    uint8_t mode;   // 0:ÁĞ±íÑ­»· 1:µ¥ÇúÑ­»·
+    uint8_t mode;   // 0:åˆ—è¡¨å¾ªç¯ 1:å•æ›²å¾ªç¯
     int fileIndex;
     int fileDuration;
     int fileProgress;
     int fileNum;
 }musicState_t;
 extern musicState_t musicState;
-void BleCmdSend(char *cmd);
+void writeBluetoothCommand(char *cmd);
+void executeBleCommand();
 
 #endif // !__BLE_DRIVER_H__

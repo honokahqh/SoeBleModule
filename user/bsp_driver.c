@@ -31,7 +31,7 @@ void uart_init()
 	USART1->BRR = 0x1388; // baud 9600   115200:0x1A1
 	USART1->CR1 = 0x2D;	  // Tx Rx RxIE Enable
 
-	USART2->BRR = 0x1A1; // baud 9600
+	USART2->BRR = 0x1388; // baud 9600
 	USART2->CR1 = 0x2D;	 // Tx Rx RxIE Enable
 }
 
@@ -198,7 +198,7 @@ void flash_erase(uint32_t addr)
 }
 
 uint32_t offset = 0;
-void FlashDataSave()
+void MbsFlashDataSave()
 {
 	uint16_t data[5];
 	memset(data, 0, sizeof(data));
@@ -209,6 +209,7 @@ void FlashDataSave()
 	}
 	data[0] |= (mbsCoilValue[Coil_BleMode].pData & 0x01) << 1;	 /* 切换模式：0蓝牙，1有线 */
 	data[0] |= (mbsCoilValue[Coil_MusicMode].pData & 0x01) << 2; /* 0列表循环 1单曲循环 */
+	data[1] = (mbsHoldRegValue[Reg_Volume].pData & 0x1F) << 8;	 /* 音量0~30 */
 	data[1] |= (mbsHoldRegValue[Reg_LoopIndex].pData & 0xFF);	 /* 单曲循环第n首 */
 	data[2] = mbsHoldRegValue[Reg_BleMac].pData;				 /* 48位MAC地址 */
 	data[2] |= mbsHoldRegValue[Reg_BleMac + 1].pData << 8;
@@ -220,7 +221,7 @@ void FlashDataSave()
 	offset += 10;
 }
 
-void FlashDataRead()
+void MbsFlashDataSyn()
 {
 	for (offset = 0; offset < 1000; offset += 10)
 	{
@@ -231,16 +232,21 @@ void FlashDataRead()
 	{
 		mbsCoilValue[Coil_BleMode].pData = (*(uint16_t *)(MbsDataAddr + offset - 10) >> 1) & 0x01;
 		mbsCoilValue[Coil_MusicMode].pData = (*(uint16_t *)(MbsDataAddr + offset - 10) >> 2) & 0x01;
+		mbsHoldRegValue[Reg_Volume].pData = (*(uint16_t *)(MbsDataAddr + offset - 8) >> 8) & 0x1F;
 		mbsHoldRegValue[Reg_LoopIndex].pData = *(uint16_t *)(MbsDataAddr + offset - 8) & 0xFF;
 		mbsHoldRegValue[Reg_BleMac].pData = *(uint16_t *)(MbsDataAddr + offset - 6) & 0xFF;
 		mbsHoldRegValue[Reg_BleMac + 1].pData = *(uint16_t *)(MbsDataAddr + offset - 6) >> 8;
-		mbsHoldRegValue[Reg_BleMac + 2].pData = *(uint16_t *)(MbsDataAddr + offset - 4)  & 0xFF;
+		mbsHoldRegValue[Reg_BleMac + 2].pData = *(uint16_t *)(MbsDataAddr + offset - 4) & 0xFF;
 		mbsHoldRegValue[Reg_BleMac + 3].pData = *(uint16_t *)(MbsDataAddr + offset - 4) >> 8;
-		mbsHoldRegValue[Reg_BleMac + 4].pData = *(uint16_t *)(MbsDataAddr + offset - 2)  & 0xFF;
+		mbsHoldRegValue[Reg_BleMac + 4].pData = *(uint16_t *)(MbsDataAddr + offset - 2) & 0xFF;
 		mbsHoldRegValue[Reg_BleMac + 5].pData = *(uint16_t *)(MbsDataAddr + offset - 2) >> 8;
 	}
 	else
+	{
 		mbsCoilValue[Coil_BleMode].pData = BleMode;
+		mbsHoldRegValue[Reg_Volume].pData = 10;
+	}
+		
 }
 
 typedef void (*appFunction)(void);

@@ -10,7 +10,7 @@
 #define LOG_WARN 2
 #define LOG_INFO 3
 #define LOG_ALL 4 
-#define LOG_LEVEL LOG_ALL
+#define LOG_LEVEL LOG_NONE
 
 #define log_printf(level, tag, fmt, ...) do { \
         printf("%s (%u) %s: " fmt "", level >= LOG_ALL ? "D" : \

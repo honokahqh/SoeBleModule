@@ -26,7 +26,9 @@ int main()
     // 配置系统滴答定时器
     SysTick_Config(48000000 / 1000);
     // 初始化看门狗
-    // watchDog_init();
+#if IsRelease
+    watchDog_init();
+#endif
     // 初始化GPIO
     gpio_init();
     // 初始化UART
@@ -34,11 +36,14 @@ int main()
     // 检查是否需要进行IAP（In-Application Programming）
     IapCheck();
     // 初始化ModBus映射
-#if IsApplication
     MBS_MappingInit();
     // 读取Flash数据
-    FlashDataRead();
+    MbsFlashDataSyn();
+#if !IsApplication
+	char temp_data[] = "AT+SP112233445566\r\n"; // 在boot中,防止蓝牙乱连,连接一个未定义mac
+    UartBleSendData(temp_data, sizeof(temp_data));
 #endif
+
     // 运行系统
     system_run();
 }
@@ -90,7 +95,7 @@ static void IapCheck()
     // 如果不满足以上条件，表示IAP失败
     else
     {
-        LOG_E(TAG, "IAP failed\r\n");
+        LOG_E(TAG, "no valid app\r\n");
     }
 #else
     // 在应用程序模式下的处理逻辑

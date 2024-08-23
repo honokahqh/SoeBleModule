@@ -41,8 +41,8 @@ void flash_write_halfword(uint32_t addr, uint16_t data);
 void flash_write_word(uint32_t addr, uint32_t data);
 void flash_program_bytes(uint32_t addr, uint8_t *data, uint32_t len); // align 4
 void flash_erase(uint32_t addr);
-void FlashDataSave(void);
-void FlashDataRead(void);
+void MbsFlashDataSave(void);
+void MbsFlashDataSyn(void);
 unsigned char jumpToApplication(unsigned int appAddress);
 
 #endif // !__BSP_DRIVER_H__

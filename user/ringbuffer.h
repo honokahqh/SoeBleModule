@@ -3,16 +3,16 @@
 
 #include "main.h"
 
+#define MAX_COMMANDS 10
+#define MAX_LENGTH 20
 typedef struct {
-    uint32_t *data;
+    char buffer[MAX_COMMANDS][MAX_LENGTH];
     uint8_t head;
     uint8_t tail;
     uint8_t size;
-    uint8_t maxsize;
 } ring_buffer_t;
-extern ring_buffer_t ring_buffer;
 
-void write_buffer(uint32_t data);
-uint8_t read_buffer(uint32_t *data); // 1: success 0: fail
+int write_command(char *command);
+int read_command(char *command);
 
 #endif // !__RING_BUFFER__H

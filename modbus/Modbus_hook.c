@@ -100,6 +100,8 @@ void MBS_Function05H(void)
 			MBS_PortSendAck(MBS_EX_SLAVE_DEVICE_FAILURE); 
 			return;
 		}
+		else
+			MBS_PortSendAck(MBS_EX_NONE);
 	}
 	else
 	{
